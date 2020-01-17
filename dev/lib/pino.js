@@ -1,5 +1,6 @@
 class Pino {
   constructor() {
+    this.connected = false;
 
     this.boardProperties = {
       accelerometer: {
@@ -155,6 +156,7 @@ class Pino {
 
       this.boardProperties[ property ].rendered = false;
     }
+    this.connected = true;
     this.updatestatusMsg( 'connected.' );
   }
 
@@ -195,6 +197,8 @@ class Pino {
       }
     }
     updatestatusMsg( 'Device ' + device.name + ' is disconnected.' );
+    this.connected = false;
+
   }
 
   createPinoPanel() {
@@ -222,7 +226,21 @@ class Pino {
     //document.getElementById( "disconnect" ).addEventListener( "click", this.disconnect );
   }
 
-  connectButtons() {
+  setRGBLed( r, g, b ) {
+    var rgb_values = Uint8Array.of( r, g, b );
+    this.boardProperties[ 'led' ].writeValue = rgb_values;
+    this.BLEwriteTo( 'led' );
+  }
 
+  BLEwriteTo( property ) {
+    if ( this.boardProperties[ property ].writeBusy ) return; // dropping writes when one is in progress instead of queuing as LED is non-critical / realtime
+    this.boardProperties[ property ].writeBusy = true; // Ensure no write happens when GATT operation in progress
+    this.boardProperties[ property ].characteristic.writeValue( this.boardProperties[ property ].writeValue )
+      .then( _ => {
+        this.boardProperties[ property ].writeBusy = false;
+      } )
+      .catch( error => {
+        console.log( error );
+      } );
   }
 }

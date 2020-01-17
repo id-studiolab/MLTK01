@@ -11,6 +11,12 @@ function setup() {
 
 function draw() {
   background( 100 );
+
+  if ( pino.connected ) {
+    console.log( "connected" );
+    pino.setRGBLed( 0, 255, 0 );
+  } else {}
+
 };
 
 window.windowResized = () => {
