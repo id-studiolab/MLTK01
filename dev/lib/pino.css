@@ -1,0 +1,9 @@
+#pinoPanel{
+  width: 100%;
+  position: relative;
+  height: 50px;
+  top: 0px;
+  right:0px;
+  background-color: #fafafa;
+  padding: 10px;
+}
