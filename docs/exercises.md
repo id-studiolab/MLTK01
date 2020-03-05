@@ -6,12 +6,13 @@ nav_order: 2
 
 
 
+## impo-sture
 
 ![alt text](./assets/placeholder.png "posture-thing")
 
 
+## drama-stick
+
 ![alt text](./assets/placeholder.png "aida bellissima")
 
-
-![alt text](./assets/placeholder.png "aida bellissima")
 
