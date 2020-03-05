@@ -6,7 +6,7 @@ nav_order: 2
 
 
 
-## impo-sture
+### impo-sture
 
 ![alt text](./assets/placeholder.png "posture-thing")
 
@@ -14,7 +14,7 @@ In this exercise you will train a model to recognize when you are sitting proper
 {: .fs-2 }
 
 
-## drama-stick
+### drama-stick
 
 ![alt text](./assets/placeholder.png "aida bellissima")
 
