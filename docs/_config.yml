@@ -1,1 +1,15 @@
-theme: jekyll-theme-minimal
+title: MLTK01
+description: an awesome toolkit
+
+remote_theme: pmarsceill/just-the-docs
+
+# Enable or disable the site search
+search_enabled: true
+
+aux_links:
+    "Contribute to the project on github":
+      - "https://github.com/id-studiolab/MLTK01"
+      
+# Google Analytics Tracking (optional)
+# e.g, UA-1234567-89
+# ga_tracking: UA-96156394-2
