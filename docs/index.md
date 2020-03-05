@@ -6,9 +6,9 @@ nav_order: 0
 
 ### MLTK01
 
-##### An open-source toolkit for fast prototyping tangible _learning things_, build on top of [Arduino](https://www.arduino.cc/) and [ml5js](https://ml5js.org/).
+##### An open-source toolkit for fast prototyping _tangible learning things_, build on top of [Arduino](https://www.arduino.cc/) and [ml5js](https://ml5js.org/).
 
 ![alt text](./assets/photo_2020-03-05_07-33-09.jpg "aida bellissima")
 
-toolkit for fast prototyping learning things / cut out hardware prototyping time and focus on what data to use and how to train, designing behaviours and thinking about the interactions.
-in line with our open phylosophy, we combined two open source tools, the ml5js library as software, and arduino as hardware. We also designed a dedicated pcb that extending the capabilities of an Arduino Nano, let you simply plug it and play machine learning sketches thanks to its tangible training interface.
+This toolkit allows to cut out hardware prototyping time and focus on the design of interactions with tangible learning things, giving space to explorations of unconventional data sources and to the creative craft of behaviors. 
+As we strive for open approaches to education, we combined hardware and software from two existing open source tools: Arduino and ml5js, an easy-to-use machine learning tool that enable to play and customize a library of machine learning algorithms examples. The two are combined into a dedicated PCB that, extending the capabilities of an Arduino Nano, functions also as tangible interface and allows to simply plug, train and play machine learning sketches.
