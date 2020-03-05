@@ -1,6 +1,15 @@
 
 # Ciao Luce!
 
+# Navigation Structure
+{: .no_toc }
+
+## Table of contents
+{: .no_toc .text-delta }
+
+1. TOC
+{:toc}
+
 ## questo é h2
 
 Questa é la pagina di index.
