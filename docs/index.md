@@ -6,7 +6,7 @@ nav_order: 0
 
 ### MLTK01
 
-##### An open-source toolkit for fast prototyping _learning things_, build on top of (https://www.arduino.cc/ "Arduino") and (https://ml5js.org/ "ml5js").
+##### An open-source toolkit for fast prototyping tangible _learning things_, build on top of (https://www.arduino.cc/ "Arduino") and (https://ml5js.org/ "ml5js").
 
 ![alt text](./assets/photo_2020-03-05_07-33-09.jpg "aida bellissima")
 
