@@ -1,6 +1,8 @@
 title: MLTK01
 description: an awesome toolkit
 
+logo: "/assets/images/just-the-docs.png"
+
 remote_theme: pmarsceill/just-the-docs
 
 # Enable or disable the site search
