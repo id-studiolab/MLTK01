@@ -8,7 +8,7 @@ nav_order: 0
 
 ##### An open-source toolkit for fast prototyping _tangible learning things_, build on top of [Arduino](https://www.arduino.cc/) and [ml5js](https://ml5js.org/).
 
-![alt text](./assets/photo_2020-03-05_07-33-09.jpg "aida bellissima")
+![alt text](./assets/toolkit.jpg "toolkit")
 
 
 This toolkit allows to cut out hardware prototyping time and focus on the design of interactions with tangible learning things, giving space to explorations of unconventional data sources and to the creative craft of behaviors. 
