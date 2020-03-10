@@ -17,7 +17,7 @@ In this exercise you will train a model to recognize when you are sitting proper
 ### drama-stick
 
 ![alt text](./assets/placeholder.png "aida bellissima")
-In this exercise you will train a model to recognize your gestures and play sounds with them.
+In this exercise you will train a model to recognize your hand gestures and play sounds with them.
 {: .fs-2 }
 
 
