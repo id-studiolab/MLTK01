@@ -1,0 +1,3 @@
+(sym_lib_table
+  (lib (name Arduino-nano-33)(type Legacy)(uri /Users/Lorenzo/Downloads/hulkco-Nano_33-6dc7fe0/lib/Arduino-nano-33.lib)(options "")(descr ""))
+)
