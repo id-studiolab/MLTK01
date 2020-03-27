@@ -5,6 +5,24 @@ class Pino {
   constructor( trainfn, classifyfn ) {
     this.connected = false;
     this.boardProperties = {
+      ambientLight: {
+        uuid: '6fbe1da7-2001-44de-92c4-bb6e04fb0212',
+        properties: [ 'BLENotify' ],
+        structure: [ 'Uint16' ],
+        data: { 'ambientLight': [] }
+      },
+      colorimeter: {
+        uuid: '6fbe1da7-2002-44de-92c4-bb6e04fb0212',
+        properties: [ 'BLENotify' ],
+        structure: [ 'Uint16', 'Uint16', 'Uint16' ],
+        data: { 'R': [], 'G': [], 'B': [] }
+      },
+      proximity: {
+        uuid: '6fbe1da7-2003-44de-92c4-bb6e04fb0212',
+        properties: [ 'BLENotify' ],
+        structure: [ 'Uint8' ],
+        data: { proximity: [] }
+      },
       accelerometer: {
         uuid: '6fbe1da7-3001-44de-92c4-bb6e04fb0212',
         properties: [ 'BLENotify' ],
@@ -23,12 +41,25 @@ class Pino {
         structure: [ 'Float32', 'Float32', 'Float32' ],
         data: { 'Mx': [], 'My': [], 'Mz': [] },
       },
-      colorimeter: {
-        uuid: '6fbe1da7-2002-44de-92c4-bb6e04fb0212',
-        properties: [ 'BLENotify' ],
-        structure: [ 'Uint16', 'Uint16', 'Uint16' ],
-        data: { 'R': [], 'G': [], 'B': [] }
+      pressure: {
+        uuid: '6fbe1da7-4001-44de-92c4-bb6e04fb0212',
+        properties: [ 'BLERead' ],
+        structure: [ 'Float32' ],
+        data: { pressure: [] }
       },
+      temperature: {
+        uuid: '6fbe1da7-4002-44de-92c4-bb6e04fb0212',
+        properties: [ 'BLERead' ],
+        structure: [ 'Float32' ],
+        data: { temperature: [] }
+      },
+      humidity: {
+        uuid: '6fbe1da7-4003-44de-92c4-bb6e04fb0212',
+        properties: [ 'BLERead' ],
+        structure: [ 'Float32' ],
+        data: { humidity: [] }
+      },
+
       microphone: {
         uuid: '6fbe1da7-5001-44de-92c4-bb6e04fb0212',
         properties: [ 'BLENotify' ],
@@ -140,30 +171,6 @@ class Pino {
         writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
         writeValue: null
       },
-      proximity: {
-        uuid: '6fbe1da7-2003-44de-92c4-bb6e04fb0212',
-        properties: [ 'BLENotify' ],
-        structure: [ 'Uint8' ],
-        data: { proximity: [] }
-      },
-      temperature: {
-        uuid: '6fbe1da7-4002-44de-92c4-bb6e04fb0212',
-        properties: [ 'BLERead' ],
-        structure: [ 'Float32' ],
-        data: { temperature: [] }
-      },
-      humidity: {
-        uuid: '6fbe1da7-4003-44de-92c4-bb6e04fb0212',
-        properties: [ 'BLERead' ],
-        structure: [ 'Float32' ],
-        data: { humidity: [] }
-      },
-      pressure: {
-        uuid: '6fbe1da7-4001-44de-92c4-bb6e04fb0212',
-        properties: [ 'BLERead' ],
-        structure: [ 'Float32' ],
-        data: { pressure: [] }
-      },
       encoder: {
         uuid: '6fbe1da7-8001-44de-92c4-bb6e04fb0212',
         properties: [ 'BLERead', 'BLENotify' ],
@@ -186,7 +193,9 @@ class Pino {
         uuid: '6fbe1da7-9001-44de-92c4-bb6e04fb0212',
           properties: [ 'BLERead', 'BLENotify' ],
           structure: [ 'Uint8' ],
-          data: { class: [] }
+          data: { class: [] },
+          writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
+          writeValue: null
       }
     }
 
@@ -267,6 +276,11 @@ class Pino {
 
   //when new data arrive from the arduino as notification
   handleIncomingNotification( sensor, dataReceived ) {
+
+    if ( sensor.uuid == this.boardProperties.colorimeter.uuid ) {
+      console.log( dataReceived );
+    }
+
     const columns = Object.keys( sensor.data ); // column headings for this sensor
     const typeMap = {
       "Uint8": { fn: DataView.prototype.getUint8, bytes: 1 },
@@ -285,9 +299,10 @@ class Pino {
       // Keep array at buffer size
       if ( sensor.data[ columns[ i ] ].length > this.maxRecords ) { sensor.data[ columns[ i ] ].shift(); }
       // move pointer forward in data packet to next value
-      this.packetPointer += typeMap[ dataType ].bytes;
+      packetPointer += typeMap[ dataType ].bytes;
       this.bytesReceived += typeMap[ dataType ].bytes;
       i++;
+
 
       if ( sensor.uuid == this.boardProperties.mode.uuid ) {
 
@@ -305,7 +320,6 @@ class Pino {
             this.stopTraining();
           }
         }
-
       }
     } );
     this.updatePinoPanel();
@@ -334,7 +348,7 @@ class Pino {
       // Keep array at buffer size
       if ( sensor.data[ columns[ i ] ].length > this.maxRecords ) { sensor.data[ columns[ i ] ].shift(); }
       // move pointer forward in data packet to next value
-      this.packetPointer += typeMap[ dataType ].bytes;
+      packetPointer += typeMap[ dataType ].bytes;
       this.bytesReceived += typeMap[ dataType ].bytes;
       i++;
     } );
@@ -405,6 +419,8 @@ class Pino {
   addTrainingData( label, features ) {
     this.knnClassifier.addExample( features, label );
     console.log( this.knnClassifier.getCount() );
+
+    this.addtrainingDataToPanel( label, JSON.stringify( features ) );
   }
 
   classify( features, callback ) {
@@ -422,6 +438,8 @@ class Pino {
         }
         setTimeout( () => {
           callback( err, result );
+          let label = parseInt( result.label, 10 );
+          this.setClass( label );
         }, trainClassifyInterval )
       } );
     }
@@ -446,10 +464,48 @@ class Pino {
       x.querySelector( ".value" ).innerHTML = JSON.stringify( this.boardProperties[ key ].data );
     } )
   }
+  createTrainingDataView() {
+    var trainingdata = document.createElement( "div" );
+    trainingdata.id = "trainingData";
+    trainingdata.classList.add( "panel" );
+
+    trainingdata.innerHTML =
+      '<div class="head">\n' +
+      '<p class="title">Training Data View</p>\n' +
+      '</div>\n' +
+      '<div id="data">\n' +
+
+      '<div class="dataContainer" id="0">\n' +
+      '</div>\n' +
+      '<div class="dataContainer" id="1">\n' +
+      '</div>\n' +
+      '<div class="dataContainer" id="2">\n' +
+      '</div>\n' +
+      '<div class="dataContainer" id="3">\n' +
+      '</div>\n' +
+      '<div class="dataContainer" id="4">\n' +
+      '</div>\n' +
+      '<div class="dataContainer" id="5">\n' +
+      '</div>\n' +
+      '<div class="dataContainer" id="6">\n' +
+      '</div>\n' +
+      '<div class="dataContainer" id="7">\n' +
+      '</div>\n' +
+
+      '</div>\n'
+
+    document.body.appendChild( trainingdata );
+  }
+
+  addtrainingDataToPanel( c, d ) {
+    let dataPanel = document.getElementById( c );
+    dataPanel.innerHTML += d;
+  }
 
   createPinoPanel() {
     var pinoPanel = document.createElement( "div" );
     pinoPanel.id = "pinoPanel";
+    pinoPanel.classList.add( "panel" );
 
     pinoPanel.innerHTML =
       '<div class="head">\n' +
@@ -525,8 +581,8 @@ class Pino {
   getColorimeterData() {
     var colorimeterData = [];
     colorimeterData[ 0 ] = this.boardProperties.colorimeter.data.R[ this.boardProperties.colorimeter.data.R.length - 1 ];
-    colorimeterData[ 1 ] = this.boardProperties.colorimeter.data.G[ this.boardProperties.colorimeter.data.R.length - 1 ];
-    colorimeterData[ 2 ] = this.boardProperties.colorimeter.data.B[ this.boardProperties.colorimeter.data.R.length - 1 ];
+    colorimeterData[ 1 ] = this.boardProperties.colorimeter.data.G[ this.boardProperties.colorimeter.data.G.length - 1 ];
+    colorimeterData[ 2 ] = this.boardProperties.colorimeter.data.B[ this.boardProperties.colorimeter.data.B.length - 1 ];
     return ( colorimeterData );
   }
 
@@ -545,6 +601,16 @@ class Pino {
     let propertyName = 'ledRing' + ( index + 1 );
     this.boardProperties[ propertyName ].writeValue = rgb_values;
     this.BLEwriteTo( propertyName );
+  }
+
+  // TODO: fix this function to write to the arduino characteristic
+  setClass( c ) {
+    let data = new Uint8Array( [ c ] )
+    let propertyName = 'class'
+    if ( c != this.boardProperties[ propertyName ].data.class[ 0 ] ) {
+      this.boardProperties[ propertyName ].writeValue = data;
+      this.BLEwriteTo( propertyName );
+    }
   }
 
   BLEwriteTo( property ) {
@@ -568,4 +634,17 @@ class Pino {
 
       } );
   }
+}
+
+function ab2str( buf ) {
+  return String.fromCharCode.apply( null, new Uint16Array( buf ) );
+}
+
+function str2ab( str ) {
+  var buf = new ArrayBuffer( str.length * 2 ); // 2 bytes for each char
+  var bufView = new Uint16Array( buf );
+  for ( var i = 0, strLen = str.length; i < strLen; i++ ) {
+    bufView[ i ] = str.charCodeAt( i );
+  }
+  return buf;
 }

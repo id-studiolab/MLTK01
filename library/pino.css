@@ -2,6 +2,25 @@ body{
   font-family: sans-serif;
 }
 
+.panel{
+  display: inline-block;
+}
+.data{
+  width: 100%;
+  display: block;
+}
+.dataContainer{
+  display: inline-flex;
+  width: 11%;
+  border: 1px solid black;
+  height: auto;
+}
+
+#trainingData{
+  width: 100%;
+}
+
+
 #pinoPanel{
   width: 100%;
   position: relative;
