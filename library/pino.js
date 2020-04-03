@@ -1,6 +1,9 @@
 //how often do we want to collect new samples to train and how often do we want to get a classification result
 let trainClassifyInterval = 100;
 
+//how often do we want ble to poll properties value
+let pollingInterval = 500;
+
 class Pino {
   constructor( trainfn, classifyfn ) {
     this.connected = false;
@@ -238,7 +241,7 @@ class Pino {
 
     this.updatestatusMsg( 'connecting to device ...' );
     device.addEventListener( 'gattserverdisconnected', ( e ) => {
-      this.onDisconnected();
+      this.onDisconnected( e );
     }, false );
 
     const server = await device.gatt.connect();
@@ -264,7 +267,7 @@ class Pino {
           this.boardProperties[ property ].characteristic.readValue().then( ( data ) => {
             this.handleIncomingRead( this.boardProperties[ property ], data );
           } );
-        }, 500 );
+        }, pollingInterval );
       }
       this.boardProperties[ property ].rendered = false;
     }
@@ -276,10 +279,6 @@ class Pino {
 
   //when new data arrive from the arduino as notification
   handleIncomingNotification( sensor, dataReceived ) {
-
-    if ( sensor.uuid == this.boardProperties.colorimeter.uuid ) {
-      console.log( dataReceived );
-    }
 
     const columns = Object.keys( sensor.data ); // column headings for this sensor
     const typeMap = {
@@ -359,13 +358,15 @@ class Pino {
   onDisconnected( event ) {
     let device = event.target;
     // clear read polling
-    for ( const sensor of sensors ) {
-      if ( typeof BLEsense[ sensor ].polling !== 'undefined' ) {
-        clearInterval( BLEsense[ sensor ].polling );
+    for ( const property of this.boardPropertiesNames ) {
+      if ( typeof this.boardProperties[ property ].polling !== 'undefined' ) {
+        clearInterval( this.boardProperties[ property ].polling );
       }
     }
-    updatestatusMsg( 'Device ' + device.name + ' is disconnected.' );
+    this.updatestatusMsg( 'Device ' + device.name + ' is disconnected.' );
     this.connected = false;
+    this.stopTraining();
+    this.stopClassification();
 
   }
 
@@ -532,7 +533,6 @@ class Pino {
     let dataDiv = document.getElementById( "data" )
 
     Object.keys( this.boardProperties ).forEach( function( key, index ) {
-      console.log( key, index );
       var dataElem = document.createElement( "div" );
       dataElem.id = key;
       dataElem.classList.add( "data-panel" );
@@ -584,6 +584,22 @@ class Pino {
     colorimeterData[ 1 ] = this.boardProperties.colorimeter.data.G[ this.boardProperties.colorimeter.data.G.length - 1 ];
     colorimeterData[ 2 ] = this.boardProperties.colorimeter.data.B[ this.boardProperties.colorimeter.data.B.length - 1 ];
     return ( colorimeterData );
+  }
+
+  getGyroscopeData() {
+    var gyroscopeData = [];
+    gyroscopeData[ 0 ] = this.boardProperties.gyroscope.data.Gx[ this.boardProperties.gyroscope.data.Gx.length - 1 ];
+    gyroscopeData[ 1 ] = this.boardProperties.gyroscope.data.Gy[ this.boardProperties.gyroscope.data.Gy.length - 1 ];
+    gyroscopeData[ 2 ] = this.boardProperties.gyroscope.data.Gz[ this.boardProperties.gyroscope.data.Gz.length - 1 ];
+    return ( gyroscopeData );
+  }
+
+  getMagnetometerData() {
+    var magnetometerData = [];
+    magnetometerData[ 0 ] = this.boardProperties.magnetometer.data.Mx[ this.boardProperties.magnetometer.data.Mx.length - 1 ];
+    magnetometerData[ 1 ] = this.boardProperties.magnetometer.data.My[ this.boardProperties.magnetometer.data.My.length - 1 ];
+    magnetometerData[ 2 ] = this.boardProperties.magnetometer.data.Mz[ this.boardProperties.magnetometer.data.Mz.length - 1 ];
+    return ( magnetometerData );
   }
 
   getActiveClass() {

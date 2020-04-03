@@ -1,5 +1,7 @@
 let pino;
 
+let activeClass = "";
+
 function setup() {
   createCanvas( 400, 400 );
   frameRate( 3 )
@@ -11,16 +13,20 @@ function setup() {
 
 function draw() {
   background( 100 );
+
+  textAlign( CENTER );
+  textSize( 30 );
+  text( activeClass, width / 2, height / 2 );
 }
 
 function train() {
   let label = pino.getActiveClass();
-  let features = pino.getColorimeterData();
+  let features = pino.getMagnetometerData();
   pino.addTrainingData( label, features );
 }
 
 function classify() {
-  let features = pino.getColorimeterData();
+  let features = pino.getMagnetometerData();
   console.log( features );
   pino.classify( features, gotResults );
 }
@@ -30,6 +36,7 @@ function gotResults( err, result ) {
     console.log( err );
   } else {
     console.log( result );
+    activeClass = result.label;
     classify();
   }
 }
