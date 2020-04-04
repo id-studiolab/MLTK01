@@ -9,7 +9,7 @@ gulp.task( 'generate-doc', ( done ) => {
 
   const jsdocOptions = {
     files: 'library/*.js', // specify where your files are
-    template: fs.readFileSync( './docs/api-template.hbs', 'utf8' ), // read a template file
+    template: fs.readFileSync( 'docs/api-template.hbs', 'utf8' ), // read a template file
     'example-lang': 'js', // specify the "@example" code block language
     noCache: true, // Bypass caching
   }
