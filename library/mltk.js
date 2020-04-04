@@ -8,8 +8,8 @@ class Mltk {
 
   /**
    * Note: MLTK main class
-   * @param {Client} gp - parent g11n-pipeline client object
-   * @param {Object} props - properties to inherit
+   * @param {Function} TrainFunction - the function used for the training
+   * @param {Function} PlayFunction - The function used in play mode
    * @example
    *
    * let mltk;

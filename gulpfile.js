@@ -7,9 +7,11 @@ const jsdoc2md = require( 'jsdoc-to-markdown' )
 
 gulp.task( 'generate-doc', ( done ) => {
 
+  console.log( fs.readFileSync( './docs/api-template.hbs', 'utf8' ) );
+
   const jsdocOptions = {
+    template: fs.readFileSync( './docs/api-template.hbs', 'utf8' ),
     files: 'library/*.js', // specify where your files are
-    template: fs.readFileSync( 'docs/api-template.hbs', 'utf8' ), // read a template file
     'example-lang': 'js', // specify the "@example" code block language
     noCache: true, // Bypass caching
   }
