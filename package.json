@@ -1,0 +1,29 @@
+{
+  "name": "mltk01",
+  "version": "1.0.0",
+  "description": "automate the documentation process for the library",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "dependencies": {
+    "jsdoc-to-markdown": "^5.0.3"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/id-studiolab/MLTK01.git"
+  },
+  "author": "lorenzo romagnoli",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/id-studiolab/MLTK01/issues"
+  },
+  "homepage": "https://github.com/id-studiolab/MLTK01#readme"
+}

@@ -4,7 +4,13 @@ let trainClassifyInterval = 100;
 //how often do we want ble to poll properties value
 let pollingInterval = 500;
 
-class Pino {
+class Mltk {
+
+  /**
+   * Note: MLTK main class
+   * @param {Client} gp - parent g11n-pipeline client object
+   * @param {Object} props - properties to inherit
+   */
   constructor( trainfn, classifyfn ) {
     this.connected = false;
     this.boardProperties = {
@@ -205,7 +211,7 @@ class Pino {
     //register the function used for training
     this.trainFunction = trainfn;
     //register the function used fot the classification
-    this.classifyFunction = classifyfn;
+    this.playFunction = classifyfn;
 
     //how many records to we want to keep per each property
     this.maxRecords = 1;
@@ -321,7 +327,7 @@ class Pino {
         }
       }
     } );
-    this.updatePinoPanel();
+    this.updatemltkPanel();
     sensor.rendered = false; // flag - vizualization needs to be updated
   }
 
@@ -351,7 +357,7 @@ class Pino {
       this.bytesReceived += typeMap[ dataType ].bytes;
       i++;
     } );
-    this.updatePinoPanel();
+    this.updatemltkPanel();
     sensor.rendered = false; // flag - vizualization needs to be updated
   }
 
@@ -389,7 +395,7 @@ class Pino {
   startClassification() {
     console.log( "start classification" );
     this.stopClassificationFlag = false;
-    this.classifyFunction();
+    this.playFunction();
   }
 
   stopClassification() {
@@ -459,7 +465,7 @@ class Pino {
     sm.innerHTML = m;
   }
 
-  updatePinoPanel() {
+  updatemltkPanel() {
     Object.keys( this.boardProperties ).forEach( ( key, index ) => {
       var x = document.getElementById( key );
       x.querySelector( ".value" ).innerHTML = JSON.stringify( this.boardProperties[ key ].data );
@@ -503,14 +509,14 @@ class Pino {
     dataPanel.innerHTML += d;
   }
 
-  createPinoPanel() {
-    var pinoPanel = document.createElement( "div" );
-    pinoPanel.id = "pinoPanel";
-    pinoPanel.classList.add( "panel" );
+  createmltkPanel() {
+    var mltkPanel = document.createElement( "div" );
+    mltkPanel.id = "mltkPanel";
+    mltkPanel.classList.add( "panel" );
 
-    pinoPanel.innerHTML =
+    mltkPanel.innerHTML =
       '<div class="head">\n' +
-      '<p class="title">pino</p>\n' +
+      '<p class="title">mltk</p>\n' +
       '</div>\n' +
 
       '<div id="data">\n' +
@@ -524,7 +530,7 @@ class Pino {
       '<input id="connect" type="button" value="connect" ">\n' +
       '<input id="disconnect" type="button" value="disconnect">\n' +
       '</div>\n'
-    document.body.appendChild( pinoPanel );
+    document.body.appendChild( mltkPanel );
 
     document.getElementById( "connect" ).addEventListener( "click", ( e ) => {
       this.connect();
@@ -571,7 +577,7 @@ class Pino {
   }
 
   isRecordButtonPressed() {
-    if ( pino.boardProperties.record.data.record[ this.maxRecords - 1 ] == 1 ) {
+    if ( mltk.boardProperties.record.data.record[ this.maxRecords - 1 ] == 1 ) {
       return true;
     } else {
       return false
@@ -603,7 +609,7 @@ class Pino {
   }
 
   getActiveClass() {
-    return ( pino.boardProperties.class.data.class[ this.maxRecords - 1 ] );
+    return ( mltk.boardProperties.class.data.class[ this.maxRecords - 1 ] );
   }
 
   setRGBLed( r, g, b ) {
