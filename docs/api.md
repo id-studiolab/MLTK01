@@ -1,4 +1,8 @@
-[![view on npm](http://img.shields.io/npm/v/example.svg)](https://www.npmjs.org/package/example)
+---
+layout: default
+title: api
+nav_order: 5
+---
 
 <a name="Mltk"></a>
 
@@ -17,5 +21,3 @@ Note: MLTK main class
 
 
 * * *
-
-&copy; 1942-2016 Muhammad Ali
