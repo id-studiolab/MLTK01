@@ -15,3 +15,10 @@ The Arduino Nano 33 BLE Sense has a variety of onboard sensors meaning potential
 - Motion — 9-axis IMU (accelerometer, gyroscope, magnetometer)
 - Environmental — temperature, humidity and pressure
 - Light — brightness, color and object proximity
+
+
+<iframe src="https://editor.p5js.org/10r3n20/embed/bKeAtahOm" frameborder="0" style="width:600px;height:400px;"></iframe>
+[source code](https://editor.p5js.org/10r3n20/sketches/bKeAtahOm)
+
+
+[here are the examples](https://editor.p5js.org/10r3n20/collections/4_aBEN5sV)
