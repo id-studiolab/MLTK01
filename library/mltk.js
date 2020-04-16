@@ -56,55 +56,64 @@ class MLTK {
         uuid: '6fbe1da7-2001-44de-92c4-bb6e04fb0212',
         properties: [ 'BLENotify' ],
         structure: [ 'Uint16' ],
-        data: { 'ambientLight': [] }
+        data: { 'ambientLight': [] },
+        maxRecords: 1
       },
       colorimeter: {
         uuid: '6fbe1da7-2002-44de-92c4-bb6e04fb0212',
         properties: [ 'BLENotify' ],
         structure: [ 'Uint16', 'Uint16', 'Uint16' ],
-        data: { 'R': [], 'G': [], 'B': [] }
+        data: { 'R': [], 'G': [], 'B': [] },
+        maxRecords: 1
       },
       proximity: {
         uuid: '6fbe1da7-2003-44de-92c4-bb6e04fb0212',
         properties: [ 'BLENotify' ],
         structure: [ 'Uint8' ],
-        data: { proximity: [] }
+        data: { proximity: [] },
+        maxRecords: 1
       },
       accelerometer: {
         uuid: '6fbe1da7-3001-44de-92c4-bb6e04fb0212',
         properties: [ 'BLENotify' ],
         structure: [ 'Float32', 'Float32', 'Float32' ],
         data: { 'Ax': [], 'Ay': [], 'Az': [] },
+        maxRecords: 10
       },
       gyroscope: {
         uuid: '6fbe1da7-3002-44de-92c4-bb6e04fb0212',
         properties: [ 'BLENotify' ],
         structure: [ 'Float32', 'Float32', 'Float32' ],
         data: { 'Gx': [], 'Gy': [], 'Gz': [] },
+        maxRecords: 10
       },
       magnetometer: {
         uuid: '6fbe1da7-3003-44de-92c4-bb6e04fb0212',
         properties: [ 'BLENotify' ],
         structure: [ 'Float32', 'Float32', 'Float32' ],
         data: { 'Mx': [], 'My': [], 'Mz': [] },
+        maxRecords: 10
       },
       pressure: {
         uuid: '6fbe1da7-4001-44de-92c4-bb6e04fb0212',
         properties: [ 'BLERead' ],
         structure: [ 'Float32' ],
-        data: { pressure: [] }
+        data: { pressure: [] },
+        maxRecords: 1
       },
       temperature: {
         uuid: '6fbe1da7-4002-44de-92c4-bb6e04fb0212',
         properties: [ 'BLERead' ],
         structure: [ 'Float32' ],
-        data: { temperature: [] }
+        data: { temperature: [] },
+        maxRecords: 1
       },
       humidity: {
         uuid: '6fbe1da7-4003-44de-92c4-bb6e04fb0212',
         properties: [ 'BLERead' ],
         structure: [ 'Float32' ],
-        data: { humidity: [] }
+        data: { humidity: [] },
+        maxRecords: 1
       },
 
       microphone: {
@@ -144,7 +153,8 @@ class MLTK {
           'bD': [],
           'bE': [],
           'bF': []
-        }
+        },
+        maxRecords: 10,
       },
       led: {
         uuid: '6fbe1da7-6001-44de-92c4-bb6e04fb0212',
@@ -222,19 +232,22 @@ class MLTK {
         uuid: '6fbe1da7-8001-44de-92c4-bb6e04fb0212',
         properties: [ 'BLERead', 'BLENotify' ],
         structure: [ 'Uint8' ],
-        data: { encoder: [] }
+        data: { encoder: [] },
+        maxRecords: 1,
       },
       mode: {
         uuid: '6fbe1da7-8002-44de-92c4-bb6e04fb0212',
         properties: [ 'BLERead', 'BLENotify' ],
         structure: [ 'Uint8' ],
-        data: { mode: [] }
+        data: { mode: [] },
+        maxRecords: 1,
       },
       record: {
         uuid: '6fbe1da7-8003-44de-92c4-bb6e04fb0212',
         properties: [ 'BLERead', 'BLENotify' ],
         structure: [ 'Uint8' ],
-        data: { record: [] }
+        data: { record: [] },
+        maxRecords: 1,
       },
       class: {
         uuid: '6fbe1da7-9001-44de-92c4-bb6e04fb0212',
@@ -242,7 +255,8 @@ class MLTK {
           structure: [ 'Uint8' ],
           data: { class: [] },
           writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
-          writeValue: null
+          writeValue: null,
+          maxRecords: 1,
       }
     }
 
@@ -250,9 +264,6 @@ class MLTK {
     this.trainFunction = trainfn;
     //register the function used fot the classification
     this.playFunction = classifyfn;
-
-    //how many records to we want to keep per each property
-    this.maxRecords = 1;
 
     this.boardPropertiesNames = Object.keys( this.boardProperties );
 
@@ -343,7 +354,8 @@ class MLTK {
 
       sensor.data[ columns[ i ] ].push( unpackedValue );
       // Keep array at buffer size
-      if ( sensor.data[ columns[ i ] ].length > this.maxRecords ) { sensor.data[ columns[ i ] ].shift(); }
+
+      if ( sensor.data[ columns[ i ] ].length > sensor.maxRecords ) { sensor.data[ columns[ i ] ].shift(); }
       // move pointer forward in data packet to next value
       packetPointer += typeMap[ dataType ].bytes;
       this.bytesReceived += typeMap[ dataType ].bytes;
@@ -368,11 +380,9 @@ class MLTK {
         }
       }
     } );
-
     if ( this.controlPanelVisible ) {
       this.updatemltkPanel();
     }
-
     sensor.rendered = false; // flag - vizualization needs to be updated
   }
 
@@ -396,7 +406,7 @@ class MLTK {
       // Push sensor reading onto data array
       sensor.data[ columns[ i ] ].push( unpackedValue );
       // Keep array at buffer size
-      if ( sensor.data[ columns[ i ] ].length > this.maxRecords ) { sensor.data[ columns[ i ] ].shift(); }
+      if ( sensor.data[ columns[ i ] ].length > sensor.maxRecords ) { sensor.data[ columns[ i ] ].shift(); }
       // move pointer forward in data packet to next value
       packetPointer += typeMap[ dataType ].bytes;
       this.bytesReceived += typeMap[ dataType ].bytes;
@@ -574,6 +584,7 @@ class MLTK {
    * mltk.createControlInterface();
    */
   createControlInterface() {
+
     let MLTKControls = createDiv();
     MLTKControls.id( "MLTKControls" );
 
@@ -599,6 +610,10 @@ class MLTK {
     } );
     disconnectButton.parent( MLTKControls );
 
+    let headerContainer = select( '#headerContainer' );
+    if ( headerContainer != null ) {
+      MLTKControls.parent( headerContainer );
+    }
 
   }
 
@@ -607,13 +622,15 @@ class MLTK {
    * @category UI
    */
   createLiveDataView() {
+    this.controlPanelVisible = true;
+
     var mltkPanel = document.createElement( "div" );
     mltkPanel.id = "mltkPanel";
     mltkPanel.classList.add( "panel" );
 
     mltkPanel.innerHTML =
       '<div class="head">\n' +
-      '<p class="title">mltk</p>\n' +
+      '<p class="title">BOARD PROPERTIES</p>\n' +
       '</div>\n' +
 
       '<div id="data">\n' +
@@ -645,32 +662,57 @@ class MLTK {
    */
   createTrainingDataView() {
 
+    this.trainingDataPanelVisible = true;
     var trainingdata = document.createElement( "div" );
     trainingdata.id = "trainingData";
     trainingdata.classList.add( "panel" );
 
     trainingdata.innerHTML =
       '<div class="head">\n' +
-      '<p class="title">Training Data View</p>\n' +
+      '<p class="title">TRAINING DATA VIEW</p>\n' +
       '</div>\n' +
       '<div id="data">\n' +
 
-      '<div class="dataContainer" id="0">\n' +
+      '<div class="data-panel" id="0">\n' +
+      '<p class="label">class 0</p>' +
+      '<p class="value"></p>' +
       '</div>\n' +
-      '<div class="dataContainer" id="1">\n' +
+
+      '<div class="data-panel" id="1">\n' +
+      '<p class="label">class 1</p>' +
+      '<p class="value"></p>' +
       '</div>\n' +
-      '<div class="dataContainer" id="2">\n' +
+
+      '<div class="data-panel" id="2">\n' +
+      '<p class="label">class 3</p>' +
+      '<p class="value"></p>' +
       '</div>\n' +
-      '<div class="dataContainer" id="3">\n' +
+
+      '<div class="data-panel" id="3">\n' +
+      '<p class="label">class 3</p>' +
+      '<p class="value"></p>' +
       '</div>\n' +
-      '<div class="dataContainer" id="4">\n' +
+
+      '<div class="data-panel" id="4">\n' +
+      '<p class="label">class 4</p>' +
+      '<p class="value"></p>' +
       '</div>\n' +
-      '<div class="dataContainer" id="5">\n' +
+
+      '<div class="data-panel" id="5">\n' +
+      '<p class="label">class 5</p>' +
+      '<p class="value"></p>' +
       '</div>\n' +
-      '<div class="dataContainer" id="6">\n' +
+
+      '<div class="data-panel" id="6">\n' +
+      '<p class="label">class 6</p>' +
+      '<p class="value"></p>' +
       '</div>\n' +
-      '<div class="dataContainer" id="7">\n' +
+
+      '<div class="data-panel" id="7">\n' +
+      '<p class="label">class 7</p>' +
+      '<p class="value"></p>' +
       '</div>\n' +
+
 
       '</div>\n'
 
@@ -678,8 +720,9 @@ class MLTK {
   }
 
   addtrainingDataToPanel( c, d ) {
-    let dataPanel = document.getElementById( c );
-    dataPanel.innerHTML += d;
+    let dataPanel = select( ".value", "#" + c );
+    dataPanel.html( dataPanel.html() + d )
+    //    dataPanel.innerHTML += d;
   }
 
   ////////////////////////////////////////////////
@@ -694,7 +737,7 @@ class MLTK {
    * @returns {boolean} TRUE when MLTK board is set to TRAIN
    */
   isTrainModeActive() {
-    if ( this.boardProperties.mode.data.mode[ this.maxRecords - 1 ] == 0 ) {
+    if ( this.boardProperties.mode.data.mode[ this.boardProperties.mode.maxRecords - 1 ] == 0 ) {
       return true;
     } else {
       return false
@@ -706,7 +749,7 @@ class MLTK {
    * @returns {boolean} TRUE when MLTK board is set to PLAY
    */
   isPlayModeActive() {
-    if ( this.boardProperties.mode.data.mode[ this.maxRecords - 1 ] == 1 ) {
+    if ( this.boardProperties.mode.data.mode[ this.boardProperties.mode.maxRecords - 1 ] == 1 ) {
       return true;
     } else {
       return false
@@ -718,7 +761,7 @@ class MLTK {
    * @returns {boolean} TRUE when train button is pressed
    */
   isRecordButtonPressed() {
-    if ( mltk.boardProperties.record.data.record[ this.maxRecords - 1 ] == 1 ) {
+    if ( mltk.boardProperties.record.data.record[ this.boardProperties.record.maxRecords - 1 ] == 1 ) {
       return true;
     } else {
       return false
@@ -766,7 +809,7 @@ class MLTK {
    * @returns {Number} The number of the selected class (also shown with the on board led)
    */
   getActiveClass() {
-    return ( mltk.boardProperties.class.data.class[ this.maxRecords - 1 ] );
+    return ( mltk.boardProperties.class.data.class[ this.boardProperties.class.maxRecords - 1 ] );
   }
 
   /**

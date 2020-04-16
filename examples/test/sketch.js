@@ -14,7 +14,10 @@ let mltk;
 let activeClass = "";
 
 function setup() {
-  createCanvas( 400, 400 );
+  var canvas = createCanvas( windowWidth, windowHeight - 50 );
+
+  canvas.parent( 'sketchContainer' );
+
   //inizialize the mltk object passing the two callback functions used fot training and play mode
   mltk = new MLTK( train, play );
 
@@ -22,14 +25,14 @@ function setup() {
   mltk.createControlInterface();
 
   //create a panel to visualize the data from the board
-  //mltk.createmltkPanel();
+  //mltk.createLiveDataView();
   //visualize the training data used in each class
   //mltk.createTrainingDataView();
 };
 
 function draw() {
   // the draw function only draws the active class to the canvas
-  background( 100 );
+  background( '#f8db40' );
   textAlign( CENTER );
   textSize( 30 );
   text( activeClass, width / 2, height / 2 );
@@ -60,6 +63,10 @@ function gotResults( err, result ) {
     activeClass = result.label;
     play();
   }
+}
+
+function windowResized() {
+  resizeCanvas( windowWidth, windowHeight - 50 );
 }
 
 // function mouseClicked() {

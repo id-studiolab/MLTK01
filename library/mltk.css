@@ -1,17 +1,23 @@
 body{
   font-family: sans-serif;
+  padding: 0px;
+  margin: 0px;
 }
 
-#MLTKControls{
+#headerContainer{
   height: 50px;
-  background-color: #5d35e8;
-  margin: 0px;
-  padding-top: 14px;
   display: block;
   position: fixed;
   width: 100%;
+  z-index: 100;
+  background-color: #5d35e8;
+}
+
+#MLTKControls{
+  padding-top: 14px;
   color: white;
 }
+
 #MLTKControls button{
   background-color: #ffE970;
   border: none;
@@ -30,9 +36,24 @@ body{
   margin: 0px 10px;
 }
 
-.panel{
-  display: inline-block;
+#sketchContainer{
+  padding-top: 50px;
+  display: block;
+  position: relative;
 }
+
+/* .panel{
+  display: inline-block;
+} */
+
+.panel{
+  padding: 10px;
+}
+
+#mltkPanel{
+
+}
+
 .data{
   width: 100%;
   display: block;
@@ -44,26 +65,13 @@ body{
   height: auto;
 }
 
-#trainingData{
-  width: 100%;
-}
-
-#pinoPanel{
-  width: 100%;
-  position: relative;
-  height: 50px;
-  top: 0px;
-  right:0px;
-  background-color: #fafafa;
-  padding: 10px;
-}
-
 .data-panel{
   display: inline-flex;
-  margin: 10px;
-  border: 1px solid black;
-  padding: 5px;
-  width: auto;
+  margin: 0px;
+  padding: 10px;
+  border-bottom: 1px solid black;
+  padding: 0px;
+  width: 100%;
   min-width: 150px;
 }
 
