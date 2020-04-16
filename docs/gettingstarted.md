@@ -9,4 +9,9 @@ nav_order: 1
 
 ![alt text](./assets/placeholder.png "posture-thing")
 Lorem ipsum dolor set.
-{: .fs-2 }
+
+The Arduino Nano 33 BLE Sense has a variety of onboard sensors meaning potential for some cool Tiny ML applications:
+- Voice — digital microphone
+- Motion — 9-axis IMU (accelerometer, gyroscope, magnetometer)
+- Environmental — temperature, humidity and pressure
+- Light — brightness, color and object proximity

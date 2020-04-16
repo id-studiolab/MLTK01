@@ -36,7 +36,6 @@ function draw() {
     sounds[ activeClass ].play();
     lastActiveClass = activeClass;
   }
-
 }
 
 //this functions will be run in loop when you are in train mode and the record button is pressed
