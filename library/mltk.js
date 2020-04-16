@@ -553,7 +553,7 @@ class MLTK {
   updateStatusMsg( message ) {
     console.log( message );
     let sm = document.getElementById( "statusMsg" );
-    sm.innerHTML = m;
+    sm.innerHTML = message;
   }
 
   updatemltkPanel() {
