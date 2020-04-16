@@ -17,7 +17,7 @@ The Arduino Nano 33 BLE Sense has a variety of onboard sensors meaning potential
 - Light — brightness, color and object proximity
 
 
-<iframe src="https://editor.p5js.org/10r3n20/embed/bKeAtahOm" frameborder="0" style="width:600px;height:400px;"></iframe>
+<iframe src="https://editor.p5js.org/10r3n20/embed/bKeAtahOm" frameborder="0" width:"600px" height:"400px"></iframe>
 [source code](https://editor.p5js.org/10r3n20/sketches/bKeAtahOm)
 
 

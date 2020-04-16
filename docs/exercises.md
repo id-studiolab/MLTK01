@@ -20,4 +20,4 @@ In this exercise you will train a model to recognize when you are sitting proper
 In this exercise you will train a model to recognize your hand gestures and play sounds with them.
 {: .fs-2 }
 
-
+<iframe src="https://editor.p5js.org/10r3n20/embed/ATOYcb8QA" frameborder="0" style="width:600px;height:400px;"></iframe>
