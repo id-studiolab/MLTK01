@@ -16,12 +16,15 @@ let activeClass = "";
 function setup() {
   createCanvas( 400, 400 );
   //inizialize the mltk object passing the two callback functions used fot training and play mode
-  mltk = new Mltk( train, play );
+  mltk = new MLTK( train, play );
+
+  //add a button to initialize the connection
+  mltk.createControlInterface();
 
   //create a panel to visualize the data from the board
-  mltk.createmltkPanel();
+  //mltk.createmltkPanel();
   //visualize the training data used in each class
-  mltk.createTrainingDataView();
+  //mltk.createTrainingDataView();
 };
 
 function draw() {
@@ -59,15 +62,15 @@ function gotResults( err, result ) {
   }
 }
 
-function mouseClicked() {
-  console.log( "click" );
-
-  if ( mltk.connected ) {
-    mltk.setRGBLed( 0, 255, 0 );
-    for ( var i = 0; i < 8; i++ ) {
-      mltk.setLedRing( i, 225 / 8 * i, 0, 225 / 8 * 8 - i );
-    }
-  } else {
-    console.log( "mltk not connected" );
-  }
-}
+// function mouseClicked() {
+//   console.log( "click" );
+//
+//   if ( mltk.connected ) {
+//     mltk.setRGBLed( 0, 255, 0 );
+//     for ( var i = 0; i < 8; i++ ) {
+//       mltk.setLedRing( i, 225 / 8 * i, 0, 225 / 8 * 8 - i );
+//     }
+//   } else {
+//     console.log( "mltk not connected" );
+//   }
+// }

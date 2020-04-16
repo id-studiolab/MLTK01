@@ -4,18 +4,21 @@ let trainClassifyInterval = 100;
 //how often do we want ble to poll properties value
 let pollingInterval = 500;
 
-class Mltk {
-
+class MLTK {
   /**
-   * Note: MLTK main class
-   * @param {Function} TrainFunction - the function used for the training
+   * MLTK main class
+   * @param {Function} TrainFunction - The function used for the training
    * @param {Function} PlayFunction - The function used in play mode
+   * @typicalname mltk
    * @example
    *
    * let mltk;
    * function setup() {
    *  //inizialize the mltk object passing the two callback functions used fot training and play mode
    *  mltk = new Mltk( train, play );
+   *
+   *  //add a button to initialize the connection
+   *  mltk.createMLTKInterface();
    * };
    *
    * function draw() {
@@ -263,6 +266,8 @@ class Mltk {
     //two flags used to stop training and classification process
     this.stopClassificationFlag = false;
     this.stopTrainingFlag = false;
+
+    this.controlPanelVisible = false;
   }
 
   ////////////////////////////////////////////////
@@ -272,7 +277,7 @@ class Mltk {
   ////////////////////////////////////////////////
 
   async connect() {
-    this.updatestatusMsg( 'requesting device ...' );
+    this.updateStatusMsg( 'requesting device ...' );
 
     const device = await navigator.bluetooth.requestDevice( {
       filters: [ {
@@ -280,19 +285,19 @@ class Mltk {
       } ]
     } );
 
-    this.updatestatusMsg( 'connecting to device ...' );
+    this.updateStatusMsg( 'connecting to device ...' );
     device.addEventListener( 'gattserverdisconnected', ( e ) => {
       this.onDisconnected( e );
     }, false );
 
     const server = await device.gatt.connect();
 
-    this.updatestatusMsg( 'getting primary service ...' );
+    this.updateStatusMsg( 'getting primary service ...' );
     const service = await server.getPrimaryService( this.SERVICE_UUID );
 
     // Set up the characteristics
     for ( const property of this.boardPropertiesNames ) {
-      this.updatestatusMsg( 'characteristic ' + property + "..." );
+      this.updateStatusMsg( 'characteristic ' + property + "..." );
       this.boardProperties[ property ].characteristic = await service.getCharacteristic( this.boardProperties[ property ].uuid );
       // Set up notification
       if ( this.boardProperties[ property ].properties.includes( "BLENotify" ) ) {
@@ -314,7 +319,7 @@ class Mltk {
     }
 
     this.connected = true;
-    this.updatestatusMsg( 'connected.' );
+    this.updateStatusMsg( 'connected.' );
     this.getBoardStatus();
   }
 
@@ -362,7 +367,11 @@ class Mltk {
         }
       }
     } );
-    this.updatemltkPanel();
+
+    if ( this.controlPanelVisible ) {
+      this.updatemltkPanel();
+    }
+
     sensor.rendered = false; // flag - vizualization needs to be updated
   }
 
@@ -392,7 +401,9 @@ class Mltk {
       this.bytesReceived += typeMap[ dataType ].bytes;
       i++;
     } );
-    this.updatemltkPanel();
+    if ( this.controlPanelVisible ) {
+      this.updatemltkPanel();
+    }
     sensor.rendered = false; // flag - vizualization needs to be updated
   }
 
@@ -404,7 +415,7 @@ class Mltk {
         clearInterval( this.boardProperties[ property ].polling );
       }
     }
-    this.updatestatusMsg( 'Device ' + device.name + ' is disconnected.' );
+    this.updateStatusMsg( 'Device ' + device.name + ' is disconnected.' );
     this.connected = false;
     this.stopTraining();
     this.stopClassification();
@@ -458,6 +469,22 @@ class Mltk {
     }
   }
 
+  /**
+   * add some training data to a specific class
+   * @category ML
+   * @param {String} label - the label of the class to which associate training data
+   * @param {Array } features - the training data
+   * @example
+   *
+   * function train() {
+   *    //get the label of the class selected from the board
+   *    let label = mltk.getActiveClass();
+   *    //get some data from the board sensor and use it as training features
+   *    let features = mltk.getMagnetometerData();
+   *    mltk.addTrainingData( label, features );
+   * }
+   *
+   */
   addTrainingData( label, features ) {
     this.knnClassifier.addExample( features, label );
     console.log( this.knnClassifier.getCount() );
@@ -465,6 +492,30 @@ class Mltk {
     this.addtrainingDataToPanel( label, JSON.stringify( features ) );
   }
 
+  /**
+   * Run a set of data trough the trained classifier and assess to which class the data belongs to
+   * @category ML
+   * @param {Array } features - the data to be classified data
+   * @param {Function} callback - the function to invoke when the classification has produced some results
+   * @example
+   * //this function will be run in loop when you are in play mode
+   * function play() {
+   *    //get the data you want to "classify"
+   *    let features = mltk.getMagnetometerData();
+   *    //pass the data to the function who does the classification, once done call the "gotResults" callback function
+   *    mltk.classify( features, gotResults );
+   *  }
+   *
+   *  function gotResults( err, result ) {
+   *    if ( err ) {
+   *      console.log( err );
+   *    } else {
+   *      //take the name of the label identified and store it in the global variable activeClass
+   *      activeClass = result.label;
+   *      play();
+   *    }
+   *  }
+   */
   classify( features, callback ) {
     if ( !this.stopClassificationFlag ) {
       const numLabels = this.knnClassifier.getNumLabels();
@@ -493,9 +544,14 @@ class Mltk {
   ///////////                       //////////////
   ////////////////////////////////////////////////
 
-
-  updatestatusMsg( m ) {
-    console.log( m );
+  /**
+   * Create the connect disconnect button and visualize the connection status
+   * @category UI
+   * @param {String} message - message to display in the MLTK interface
+   * return {void}
+   */
+  updateStatusMsg( message ) {
+    console.log( message );
     let sm = document.getElementById( "statusMsg" );
     sm.innerHTML = m;
   }
@@ -506,6 +562,77 @@ class Mltk {
       x.querySelector( ".value" ).innerHTML = JSON.stringify( this.boardProperties[ key ].data );
     } )
   }
+
+  /**
+   * Create the connect disconnect button and visualize the connection status
+   * @category UI
+   * @example
+   *
+   * mltk.createControlInterface();
+   */
+  createControlInterface() {
+    let MLTKControls = createDiv();
+    MLTKControls.id( "MLTKControls" );
+
+    let connectButton = createButton( 'connect' );
+    //connectButton.position( 19, 19 );
+    connectButton.mousePressed( () => {
+      this.connect();
+    } );
+    connectButton.parent( MLTKControls );
+
+    let disconnectButton = createButton( 'disconnect' );
+    disconnectButton.mousePressed( () => {
+      //this.disconnect();
+    } );
+    disconnectButton.parent( MLTKControls );
+
+    let statusMsg = createDiv();
+    statusMsg.id( "statusMsg" );
+    statusMsg.parent( MLTKControls );
+  }
+
+  /**
+   * Visualizes the data from the sensors on the MLTK board.
+   * @category UI
+   */
+  createLiveDataView() {
+    var mltkPanel = document.createElement( "div" );
+    mltkPanel.id = "mltkPanel";
+    mltkPanel.classList.add( "panel" );
+
+    mltkPanel.innerHTML =
+      '<div class="head">\n' +
+      '<p class="title">mltk</p>\n' +
+      '</div>\n' +
+
+      '<div id="data">\n' +
+
+      '</div>\n'
+
+    document.body.appendChild( mltkPanel );
+
+    let dataDiv = document.getElementById( "data" )
+
+    Object.keys( this.boardProperties ).forEach( function( key, index ) {
+      var dataElem = document.createElement( "div" );
+      dataElem.id = key;
+      dataElem.classList.add( "data-panel" );
+      dataElem.innerHTML =
+        '<p class="label">' +
+        key + '</p>\n' +
+        '<p class="value"></p>\n'
+      dataDiv.appendChild( dataElem );
+      // key: the name of the object key
+      // index: the ordinal position of the key within the object
+    } );
+    //document.getElementById( "disconnect" ).addEventListener( "click", this.disconnect );
+  }
+
+  /**
+   * Visualize the data recorded in the 8 classes
+   * @category UI
+   */
   createTrainingDataView() {
     var trainingdata = document.createElement( "div" );
     trainingdata.id = "trainingData";
@@ -544,57 +671,17 @@ class Mltk {
     dataPanel.innerHTML += d;
   }
 
-  createmltkPanel() {
-    var mltkPanel = document.createElement( "div" );
-    mltkPanel.id = "mltkPanel";
-    mltkPanel.classList.add( "panel" );
-
-    mltkPanel.innerHTML =
-      '<div class="head">\n' +
-      '<p class="title">mltk</p>\n' +
-      '</div>\n' +
-
-      '<div id="data">\n' +
-
-      '</div>\n' +
-
-      '<div id="statusMsg">\n' +
-      '</div>\n' +
-
-      '<div class="actions">\n' +
-      '<input id="connect" type="button" value="connect" ">\n' +
-      '<input id="disconnect" type="button" value="disconnect">\n' +
-      '</div>\n'
-    document.body.appendChild( mltkPanel );
-
-    document.getElementById( "connect" ).addEventListener( "click", ( e ) => {
-      this.connect();
-    }, false );
-
-    let dataDiv = document.getElementById( "data" )
-
-    Object.keys( this.boardProperties ).forEach( function( key, index ) {
-      var dataElem = document.createElement( "div" );
-      dataElem.id = key;
-      dataElem.classList.add( "data-panel" );
-      dataElem.innerHTML =
-        '<p class="label">' +
-        key + '</p>\n' +
-        '<p class="value"></p>\n'
-      dataDiv.appendChild( dataElem );
-      // key: the name of the object key
-      // index: the ordinal position of the key within the object
-    } );
-    //document.getElementById( "disconnect" ).addEventListener( "click", this.disconnect );
-  }
-
   ////////////////////////////////////////////////
   ///////////                       //////////////
   ///////////      GETTERS SETTERS  //////////////
   ///////////                       //////////////
   ////////////////////////////////////////////////
 
-
+  /**
+   * returns true if the train/play switch on the mltk board is set to TRAIN
+   * @category MLTK BOARD API
+   * @returns {boolean} TRUE when MLTK board is set to TRAIN
+   */
   isTrainModeActive() {
     if ( this.boardProperties.mode.data.mode[ this.maxRecords - 1 ] == 0 ) {
       return true;
@@ -602,7 +689,11 @@ class Mltk {
       return false
     }
   }
-
+  /**
+   * returns true if the train/play switch on the mltk board is set to PLAY
+   * @category MLTK BOARD API
+   * @returns {boolean} TRUE when MLTK board is set to PLAY
+   */
   isPlayModeActive() {
     if ( this.boardProperties.mode.data.mode[ this.maxRecords - 1 ] == 1 ) {
       return true;
@@ -610,7 +701,11 @@ class Mltk {
       return false
     }
   }
-
+  /**
+   * returns true if the record button on the mltk board is pressed
+   * @category MLTK BOARD API
+   * @returns {boolean} TRUE when train button is pressed
+   */
   isRecordButtonPressed() {
     if ( mltk.boardProperties.record.data.record[ this.maxRecords - 1 ] == 1 ) {
       return true;
@@ -618,7 +713,11 @@ class Mltk {
       return false
     }
   }
-
+  /**
+   * Returns an array containing the colorimeter data.
+   * @category MLTK BOARD API
+   * @returns {Array} [r,g,b] Array containing red green and blue value as measured from the MLTK onboard colorimeter
+   */
   getColorimeterData() {
     var colorimeterData = [];
     colorimeterData[ 0 ] = this.boardProperties.colorimeter.data.R[ this.boardProperties.colorimeter.data.R.length - 1 ];
@@ -626,7 +725,11 @@ class Mltk {
     colorimeterData[ 2 ] = this.boardProperties.colorimeter.data.B[ this.boardProperties.colorimeter.data.B.length - 1 ];
     return ( colorimeterData );
   }
-
+  /**
+   * Returns an array containing the gyroscope data.
+   * @category MLTK BOARD API
+   * @returns {Array} [Gx,Gy,Gz] Array containing the rotational velocity on the 3 axis as measured by the on board LSM9DS1 IMU
+   */
   getGyroscopeData() {
     var gyroscopeData = [];
     gyroscopeData[ 0 ] = this.boardProperties.gyroscope.data.Gx[ this.boardProperties.gyroscope.data.Gx.length - 1 ];
@@ -634,7 +737,11 @@ class Mltk {
     gyroscopeData[ 2 ] = this.boardProperties.gyroscope.data.Gz[ this.boardProperties.gyroscope.data.Gz.length - 1 ];
     return ( gyroscopeData );
   }
-
+  /**
+   * Returns an array containing the Magnetometer data.
+   * @category MLTK BOARD API
+   * @returns {Array} [Gx,Gy,Gz] Array containing the measured magnetic field measured by the LSM9DS1 IMU
+   */
   getMagnetometerData() {
     var magnetometerData = [];
     magnetometerData[ 0 ] = this.boardProperties.magnetometer.data.Mx[ this.boardProperties.magnetometer.data.Mx.length - 1 ];
@@ -642,17 +749,36 @@ class Mltk {
     magnetometerData[ 2 ] = this.boardProperties.magnetometer.data.Mz[ this.boardProperties.magnetometer.data.Mz.length - 1 ];
     return ( magnetometerData );
   }
-
+  /**
+   * Returns the id of the selected class.
+   * @category MLTK BOARD API
+   * @returns {Number} The number of the selected class (also shown with the on board led)
+   */
   getActiveClass() {
     return ( mltk.boardProperties.class.data.class[ this.maxRecords - 1 ] );
   }
 
+  /**
+   * Set the color of the rgb led on the Arduino BLE sense.
+   * @category MLTK BOARD API
+   * @param {Number} r - The value of the red component [0-255]
+   * @param {Number} g - The value of the green component [0-255]
+   * @param {Number} b - The value of the blue component [0-255]
+   */
   setRGBLed( r, g, b ) {
     var rgb_values = Uint8Array.of( r, g, b );
     this.boardProperties[ 'led' ].writeValue = rgb_values;
     this.BLEwriteTo( 'led' );
   }
 
+  /**
+   * Set the color of the leds on the MLTK board.
+   * @category MLTK BOARD API
+   * @param {Number} index - The led we want to change color to [0-7]
+   * @param {Number} r - The value of the red component [0-255]
+   * @param {Number} g - The value of the green component [0-255]
+   * @param {Number} b - The value of the blue component [0-255]
+   */
   setLedRing( index, r, g, b ) {
     var rgb_values = Uint8Array.of( r, g, b );
     let propertyName = 'ledRing' + ( index + 1 );
