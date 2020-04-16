@@ -2,6 +2,34 @@ body{
   font-family: sans-serif;
 }
 
+#MLTKControls{
+  height: 50px;
+  background-color: #5d35e8;
+  margin: 0px;
+  padding-top: 14px;
+  display: block;
+  position: fixed;
+  width: 100%;
+  color: white;
+}
+#MLTKControls button{
+  background-color: #ffE970;
+  border: none;
+  height: 30px;
+  border-radius: 2px;
+  margin-left: 10px;
+  margin-top: -15px;
+}
+
+#MLTKControls .title{
+  display: inline-block;
+  margin: 0px 10px;
+}
+#MLTKControls .statusMsg{
+  display: inline-block;
+  margin: 0px 10px;
+}
+
 .panel{
   display: inline-block;
 }
@@ -19,7 +47,6 @@ body{
 #trainingData{
   width: 100%;
 }
-
 
 #pinoPanel{
   width: 100%;

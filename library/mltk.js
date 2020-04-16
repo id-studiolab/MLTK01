@@ -268,6 +268,7 @@ class MLTK {
     this.stopTrainingFlag = false;
 
     this.controlPanelVisible = false;
+    this.trainingDataPanelVisible = false;
   }
 
   ////////////////////////////////////////////////
@@ -489,7 +490,9 @@ class MLTK {
     this.knnClassifier.addExample( features, label );
     console.log( this.knnClassifier.getCount() );
 
-    this.addtrainingDataToPanel( label, JSON.stringify( features ) );
+    if ( this.trainingDataPanelVisible ) {
+      this.addtrainingDataToPanel( label, JSON.stringify( features ) );
+    }
   }
 
   /**
@@ -574,6 +577,15 @@ class MLTK {
     let MLTKControls = createDiv();
     MLTKControls.id( "MLTKControls" );
 
+    let MLTKTitle = createDiv( "MLTK" );
+    MLTKTitle.class( "title" );
+    MLTKTitle.parent( MLTKControls );
+
+    let statusMsg = createDiv( "Waiting to connect to board..." );
+    statusMsg.class( "statusMsg" );
+    statusMsg.id( "statusMsg" );
+    statusMsg.parent( MLTKControls );
+
     let connectButton = createButton( 'connect' );
     //connectButton.position( 19, 19 );
     connectButton.mousePressed( () => {
@@ -587,9 +599,7 @@ class MLTK {
     } );
     disconnectButton.parent( MLTKControls );
 
-    let statusMsg = createDiv();
-    statusMsg.id( "statusMsg" );
-    statusMsg.parent( MLTKControls );
+
   }
 
   /**
@@ -634,6 +644,7 @@ class MLTK {
    * @category UI
    */
   createTrainingDataView() {
+
     var trainingdata = document.createElement( "div" );
     trainingdata.id = "trainingData";
     trainingdata.classList.add( "panel" );
