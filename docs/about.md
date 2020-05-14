@@ -8,7 +8,6 @@ MLTK is a toolkit aimed at facilitating the design and development of small Mahi
 The board is not standalone and only works together with a webpage running the MLTK Library.
 
 ## MLTK BOARD
-
 ![MLTK Board](../assets/IMG_20200418_094108.jpg "MLTK01 Board")
 
 The mltk board is based on the [Aarduino Nano 33 BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense){:target="_blank"}

@@ -7,7 +7,7 @@ body{
 #headerContainer{
   height: 50px;
   display: block;
-  position: fixed;
+  position: relative;
   width: 100%;
   z-index: 100;
   background-color: #5d35e8;
