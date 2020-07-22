@@ -1,3 +1,10 @@
+let A0 = 0;
+let A5 = 5;
+
+let INPUT = 0;
+let OUTPUT = 1;
+let SERVO = 2;
+
 //how often do we want to collect new samples to train and how often do we want to get a classification result
 let trainClassifyInterval = 100;
 
@@ -9,6 +16,9 @@ class MLTK {
    * MLTK main class
    * @param {Function} TrainFunction - The function used for the training
    * @param {Function} PlayFunction - The function used in play mode
+   * @param {Function} [onConnect] - The function to be called after the boards connects
+   * @param {Function} [onDisconnect] - The function to be called after the board disconnects
+
    * @typicalname mltk
    * @example
    *
@@ -49,7 +59,7 @@ class MLTK {
    *  }
    * }
    */
-  constructor( trainfn, classifyfn ) {
+  constructor( trainfn, classifyfn, onConnect = null, onDisconnect = null ) {
     this.connected = false;
     this.boardProperties = {
       ambientLight: {
@@ -257,6 +267,33 @@ class MLTK {
           writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
           writeValue: null,
           maxRecords: 1,
+      },
+      IOMODE: {
+        uuid: '6fbe1da7-0101-44de-92c4-bb6e04fb0212',
+        properties: [ 'BLEWrite' ],
+        structure: [ 'Uint8', 'Uint8' ],
+        data: { A0: [], A5: [] },
+        writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
+        writeValue: null,
+        maxRecords: 1,
+      },
+      A0: {
+        uuid: '6fbe1da7-0102-44de-92c4-bb6e04fb0212',
+        properties: [ 'BLEWrite', 'BLERead', 'BLENotify' ],
+        structure: [ 'Uint8' ],
+        data: { A0: [] },
+        writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
+        writeValue: null,
+        maxRecords: 1,
+      },
+      A5: {
+        uuid: '6fbe1da7-0103-44de-92c4-bb6e04fb0212',
+        properties: [ 'BLEWrite', 'BLERead', 'BLENotify' ],
+        structure: [ 'Uint8' ],
+        data: { A5: [] },
+        writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
+        writeValue: null,
+        maxRecords: 1,
       }
     }
 
@@ -264,6 +301,20 @@ class MLTK {
     this.trainFunction = trainfn;
     //register the function used fot the classification
     this.playFunction = classifyfn;
+
+    //register a function to be called after the board is connected
+    if ( onConnect != null ) {
+      this.afterConnectCallback = onConnect;
+    } else {
+      this.afterConnectCallback = function() {}
+    }
+    //register a function to be called after the board disconnects
+    if ( onDisconnect != null ) {
+      this.afterDisconnectCallback = onDisconnect;
+    } else {
+      this.afterDisconnectCallback = function() {}
+    }
+
 
     this.boardPropertiesNames = Object.keys( this.boardProperties );
 
@@ -307,6 +358,7 @@ class MLTK {
     this.updateStatusMsg( 'getting primary service ...' );
     const service = await server.getPrimaryService( this.SERVICE_UUID );
 
+    console.log( "stops here" );
     // Set up the characteristics
     for ( const property of this.boardPropertiesNames ) {
       this.updateStatusMsg( 'characteristic ' + property + "..." );
@@ -322,9 +374,13 @@ class MLTK {
       if ( this.boardProperties[ property ].properties.includes( "BLERead" ) &&
         !this.boardProperties[ property ].properties.includes( "BLENotify" ) ) {
         this.boardProperties[ property ].polling = setInterval( () => {
-          this.boardProperties[ property ].characteristic.readValue().then( ( data ) => {
-            this.handleIncomingRead( this.boardProperties[ property ], data );
-          } );
+          this.boardProperties[ property ].characteristic.readValue()
+            .then( ( data ) => {
+              this.handleIncomingRead( this.boardProperties[ property ], data );
+            } )
+            .catch( ( error ) => {
+              console.log( 'Argh! error while trying to read ' + property, error );
+            } );
         }, pollingInterval );
       }
       this.boardProperties[ property ].rendered = false;
@@ -332,6 +388,7 @@ class MLTK {
 
     this.connected = true;
     this.updateStatusMsg( 'connected.' );
+    this.afterConnectCallback();
     this.getBoardStatus();
   }
 
@@ -431,14 +488,19 @@ class MLTK {
     this.stopTraining();
     this.stopClassification();
 
+    this.afterDisconnectCallback();
+
   }
 
   getBoardStatus() {
     for ( const property of this.boardPropertiesNames ) {
       if ( this.boardProperties[ property ].properties.includes( "BLERead" ) ) {
-        this.boardProperties[ property ].characteristic.readValue().then( ( data ) => {
-          this.handleIncomingRead( this.boardProperties[ property ], data );
-        } );
+        this.boardProperties[ property ].characteristic.readValue()
+          .then( ( data ) => {
+            this.handleIncomingRead( this.boardProperties[ property ], data );
+          } ).catch( ( error ) => {
+            console.log( 'Argh! error while trying to read ' + property, error );
+          } );;
       }
     }
   }
@@ -588,7 +650,7 @@ class MLTK {
     let MLTKControls = createDiv();
     MLTKControls.id( "MLTKControls" );
 
-    let MLTKTitle = createDiv( "MLTK" );
+    let MLTKTitle = createDiv( "🤖_MLTK01" );
     MLTKTitle.class( "title" );
     MLTKTitle.parent( MLTKControls );
 
@@ -612,6 +674,10 @@ class MLTK {
 
     let headerContainer = select( '#headerContainer' );
     if ( headerContainer != null ) {
+      MLTKControls.parent( headerContainer );
+    } else {
+      let headerContainer = createDiv();
+      headerContainer.id( "headerContainer" );
       MLTKControls.parent( headerContainer );
     }
 
@@ -731,6 +797,46 @@ class MLTK {
   ///////////                       //////////////
   ////////////////////////////////////////////////
 
+  setIO( id, mode ) {
+
+    let A0Mode = this.boardProperties.IOMODE.data.A0[ 0 ];
+    let A5Mode = this.boardProperties.IOMODE.data.A5[ 0 ];
+
+    if ( id == A0 ) {
+      A0Mode = mode;
+    } else if ( id == A5 ) {
+      A5Mode = mode;
+    }
+
+    var newData = Uint8Array.of( A0Mode, A5Mode );
+
+    this.boardProperties[ 'IOMODE' ].writeValue = newData;
+    this.BLEwriteTo( 'IOMODE' );
+  }
+
+  writeToIO( id, val ) {
+    let data = new Uint8Array( [ val ] )
+
+    if ( id == A0 ) {
+      this.boardProperties[ 'A0' ].writeValue = data;
+      this.BLEwriteTo( 'A0' );
+
+    } else if ( id == A5 ) {
+      this.boardProperties[ 'A5' ].writeValue = data;
+      this.BLEwriteTo( 'A5' );
+
+    }
+  }
+
+  /**
+   * returns true if the mltk board is connected
+   * @category MLTK BOARD API
+   * @returns {boolean} TRUE when MLTK board is connected
+   */
+  isConnected() {
+    return this.connected
+  }
+
   /**
    * returns true if the train/play switch on the mltk board is set to TRAIN
    * @category MLTK BOARD API
@@ -810,6 +916,10 @@ class MLTK {
    */
   getActiveClass() {
     return ( mltk.boardProperties.class.data.class[ this.boardProperties.class.maxRecords - 1 ] );
+  }
+
+  getEncoderValue() {
+    return ( mltk.boardProperties.encoder.data.encoder[ this.boardProperties.class.maxRecords - 1 ] );
   }
 
   /**

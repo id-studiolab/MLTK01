@@ -1,12 +1,14 @@
-title: MLTK01
+title: 🤖_MLTK01
 description: an awesome toolkit
 
-logo: "/assets/logotype2.png"
+# logo: "/assets/logotype2.png"
 
 remote_theme: pmarsceill/just-the-docs
 
 # Enable or disable the site search
 search_enabled: true
+
+color_scheme: dark
 
 aux_links:
     "Contribute to the project on github":
