@@ -1,9 +1,9 @@
 /*
-EXAMPLE MLTK SKETC STRUCTURE
+EXAMPLE MLTK01 SKETCh STRUCTURE
 
 This is the skeleton of a simple p5.js sketch
 which uses MLTK library to connect to the mltk board
-and classify the readings from the sensors
+to classify the readings from the sensors
  */
 
 
@@ -68,16 +68,3 @@ function gotResults( err, result ) {
 function windowResized() {
   resizeCanvas( windowWidth, windowHeight - 50 );
 }
-
-// function mouseClicked() {
-//   console.log( "click" );
-//
-//   if ( mltk.connected ) {
-//     mltk.setRGBLed( 0, 255, 0 );
-//     for ( var i = 0; i < 8; i++ ) {
-//       mltk.setLedRing( i, 225 / 8 * i, 0, 225 / 8 * 8 - i );
-//     }
-//   } else {
-//     console.log( "mltk not connected" );
-//   }
-// }

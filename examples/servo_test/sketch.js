@@ -32,9 +32,22 @@ function draw() {
 
 }
 
+let servoposition = 0;
+let servodirection = 1;
+
+function servosweepUpdate() {
+  servoposition += servodirection;
+  if ( servoposition == 180 || servoposition == 0 ) {
+    servodirection *= -1;
+  }
+  mltk.writeToIO( A0, mltk.getEncoderValue() );
+}
 
 function onConnect() {
-  //mltk.setIO( A0, SERVO );
+  mltk.setIO( A0, SERVO );
+  console.log( "connected callback" );
+
+  setInterval( servosweepUpdate, 100 );
 }
 
 

@@ -6,9 +6,9 @@
 #include <PDM.h>
 #include <ArduinoBLE.h>
 
-//#include <Servo.h>
-//Servo servoA0;
-//Servo servoA5;
+#include <Servo.h>
+Servo servoA0;
+Servo servoA5;
 
 //NEOPIXELS
 #include <Adafruit_NeoPixel.h>
@@ -76,9 +76,9 @@ BLEBooleanCharacteristic recordButtonCharacteristic         (BLE_SENSE_UUID("800
 BLEUnsignedIntCharacteristic activeClassCharacteristic      (BLE_SENSE_UUID("9001"), BLEWrite | BLERead | BLENotify);
 
 //first byte use for A0 second byte used for A5 00=analog input, 01=analog output, 02=servomotor,
-//BLECharacteristic IOConfigCharacteristic                    (BLE_SENSE_UUID("0101"), BLEWrite | BLERead, 2 * sizeof(byte));
-//BLEUnsignedIntCharacteristic IOA0ValueCharacteristic         (BLE_SENSE_UUID("0102"), BLEWrite | BLERead | BLENotify );
-//BLEUnsignedIntCharacteristic IOA5ValueCharacteristic         (BLE_SENSE_UUID("0103"), BLEWrite | BLERead | BLENotify );
+BLECharacteristic IOConfigCharacteristic                    (BLE_SENSE_UUID("0101"), BLEWrite | BLERead, 2 * sizeof(byte), true);
+BLEUnsignedIntCharacteristic IOA0ValueCharacteristic         (BLE_SENSE_UUID("0102"), BLEWrite | BLERead | BLENotify );
+BLEUnsignedIntCharacteristic IOA5ValueCharacteristic         (BLE_SENSE_UUID("0103"), BLEWrite | BLERead | BLENotify );
 
 int activeClass = -1;
 
@@ -105,7 +105,7 @@ void setup() {
   Serial.begin (115200);
   delay(1000);
 
-  while (!Serial);
+  //while (!Serial);
   Serial.println("Started");
 
   if (!APDS.begin()) {
@@ -143,7 +143,7 @@ void setup() {
     Serial.println("Failled to initialized BLE!");
     while (1);
   }
-  pixels.begin();    // This initializes the NeoPixel library.
+  pixels.begin();     // This initializes the NeoPixel library.
   pixels.clear();
   pixels.show();
 
@@ -199,9 +199,9 @@ void setup() {
 
   service.addCharacteristic(activeClassCharacteristic);
 
-//  service.addCharacteristic(IOConfigCharacteristic);
-//  service.addCharacteristic(IOA0ValueCharacteristic);
-//  service.addCharacteristic(IOA5ValueCharacteristic);
+  service.addCharacteristic(IOConfigCharacteristic);
+  service.addCharacteristic(IOA0ValueCharacteristic);
+  service.addCharacteristic(IOA5ValueCharacteristic);
 
   BLE.addService(service);
 
@@ -225,11 +225,12 @@ void setup() {
 
   activeClassCharacteristic.setEventHandler(BLEWritten, onClassCharacteristicWrite);
 
-//  IOConfigCharacteristic.setEventHandler(BLEWritten, onSetIOMode);
-//  IOA0ValueCharacteristic.setEventHandler(BLEWritten, onA0CharacteristicWrite);
-//  IOA5ValueCharacteristic.setEventHandler(BLEWritten, onA0CharacteristicWrite);
+  IOConfigCharacteristic.setEventHandler(BLEWritten, onSetIOMode);
+  IOA0ValueCharacteristic.setEventHandler(BLEWritten, onA0CharacteristicWrite);
+  IOA5ValueCharacteristic.setEventHandler(BLEWritten, onA5CharacteristicWrite);
 
   BLE.advertise();
+
 }
 
 void loop() {
@@ -343,7 +344,7 @@ void loop() {
       // arm_rms_q15 (sampleBuffer, samplesRead, &micLevel);
 
       static arm_rfft_instance_q15 fft_instance;
-      static q15_t fftoutput[256 * 2];          //has to be twice FFT size
+      static q15_t fftoutput[256 * 2];             //has to be twice FFT size
       static byte spectrum[32];
       arm_rfft_init_q15(&fft_instance, 256 /*bin count*/, 0 /*forward FFT*/, 1 /*output bit order is normal*/);
       arm_rfft_q15(&fft_instance, (q15_t*)sampleBuffer, fftoutput);
@@ -384,67 +385,74 @@ void onHumidityCharacteristicRead(BLEDevice central, BLECharacteristic character
   humidityCharacteristic.writeValue(humidity);
 }
 
-//void onSetIOMode(BLEDevice central, BLECharacteristic characteristic) {
-//  byte A0_MODE = IOConfigCharacteristic[0];
-//  byte A5_MODE = IOConfigCharacteristic[1];
-//
-//  Serial.println("configuring IO");
-//  Serial.print("A0_MODE: ");
-//  Serial.print(A0_MODE);
-//
-//  Serial.print("- A5_MODE: ");
-//  Serial.println(A5_MODE);
-//
-//  switch (A0_MODE) {
-//    case 0:
-//      //pinMode(A0, INPUT);
-//      Serial.println("configuring A0 as INPUT");
-//
-//      break;
-//    case 1:
-//      //pinMode(A0, OUTPUT);
-//      Serial.println("configuring A0 as OUTPUT");
-//
-//      break;
-//    case 2:
-//      //servoA0.attach(A0);
-//      Serial.println("configuring A0 as SERVO");
-//      break;
-//  }
-//
-//  switch (A5_MODE) {
-//    case 0:
-//      //pinMode(A5, INPUT);
-//      Serial.println("configuring A5 as INPUT");
-//
-//      break;
-//    case 1:
-//      //pinMode(A5, OUTPUT);
-//      Serial.println("configuring A5 as OUTPUT");
-//
-//      break;
-//    case 2:
-//      //servoA5.attach(A5);
-//      Serial.println("configuring A5 as SERVO");
-//      break;
-//  }
-//}
+void onSetIOMode(BLEDevice central, BLECharacteristic characteristic) {
+  byte A0_MODE = IOConfigCharacteristic[0];
+  byte A5_MODE = IOConfigCharacteristic[1];
+
+  Serial.println("configuring IO");
+  Serial.print("A0_MODE: ");
+  Serial.print(A0_MODE);
+
+  Serial.print("- A5_MODE: ");
+  Serial.println(A5_MODE);
+
+  switch (A0_MODE) {
+    case 0:
+      pinMode(A0, INPUT);
+      Serial.println("configuring A0 as INPUT");
+
+      break;
+    case 1:
+      pinMode(A0, OUTPUT);
+      Serial.println("configuring A0 as OUTPUT");
+
+      break;
+    case 2:
+      servoA0.attach(A0);
+      Serial.println("configuring A0 as SERVO");
+      break;
+  }
+
+  switch (A5_MODE) {
+    case 0:
+      pinMode(A5, INPUT);
+      Serial.println("configuring A5 as INPUT");
+
+      break;
+    case 1:
+      pinMode(A5, OUTPUT);
+      Serial.println("configuring A5 as OUTPUT");
+
+      break;
+    case 2:
+      servoA5.attach(A5);
+      Serial.println("configuring A5 as SERVO");
+      break;
+  }
+}
 
 void onA0CharacteristicWrite(BLEDevice cen2tral, BLECharacteristic characteristic) {
-//  if (IOConfigCharacteristic[0] == 0x01) {
-//    analogWrite(A0, IOA0ValueCharacteristic);
-//  } else if (IOConfigCharacteristic[0] == 0x03) {
-//    servoA0.write(IOA0ValueCharacteristic);
-//  }
+  Serial.print("set A0 value to " );
+  Serial.println(IOA0ValueCharacteristic[0] );
+
+  if (IOConfigCharacteristic[0] == 1) {
+    analogWrite(A0, IOA0ValueCharacteristic[0]);
+  } else if (IOConfigCharacteristic[0] == 2) {
+    servoA0.write(IOA0ValueCharacteristic[0]);
+  }
 }
 
 
 void onA5CharacteristicWrite(BLEDevice central, BLECharacteristic characteristic) {
-//  if (IOConfigCharacteristic[1] == 0x01) {
-//    analogWrite(A5, IOA0ValueCharacteristic);
-//  } else if (IOConfigCharacteristic[1] == 0x03) {
-//    servoA5.write(IOA0ValueCharacteristic);
-//  }
+  Serial.print("set A5 value to " );
+  Serial.println(IOA5ValueCharacteristic[0] );
+
+  if (IOConfigCharacteristic[1] == 1) {
+    analogWrite(A5, IOA5ValueCharacteristic[0]);
+  } else if (IOConfigCharacteristic[1] == 2) {
+    servoA5.write(IOA5ValueCharacteristic[0]);
+  }
+
 }
 
 
@@ -471,42 +479,42 @@ void onLedRingCharacteristicWrite(BLEDevice central, BLECharacteristic character
     r = ledRing1Characteristic[0];
     g = ledRing1Characteristic[1];
     b = ledRing1Characteristic[2];
-    pixels.setPixelColor(0, pixels.Color(r, g, b));       // Moderately bright green color.
+    pixels.setPixelColor(0, pixels.Color(r, g, b));         // Moderately bright green color.
   } else if (characteristic.uuid() == ledRing2Characteristic.uuid()) {
     r = ledRing2Characteristic[0];
     g = ledRing2Characteristic[1];
     b = ledRing2Characteristic[2];
-    pixels.setPixelColor(1, pixels.Color(r, g, b));       // Moderately bright green color.
+    pixels.setPixelColor(1, pixels.Color(r, g, b));         // Moderately bright green color.
   } else if (characteristic.uuid() == ledRing3Characteristic.uuid()) {
     r = ledRing3Characteristic[0];
     g = ledRing3Characteristic[1];
     b = ledRing3Characteristic[2];
-    pixels.setPixelColor(2, pixels.Color(r, g, b));       // Moderately bright green color.
+    pixels.setPixelColor(2, pixels.Color(r, g, b));         // Moderately bright green color.
   } else if (characteristic.uuid() == ledRing4Characteristic.uuid()) {
     r = ledRing4Characteristic[0];
     g = ledRing4Characteristic[1];
     b = ledRing4Characteristic[2];
-    pixels.setPixelColor(3, pixels.Color(r, g, b));       // Moderately bright green color.
+    pixels.setPixelColor(3, pixels.Color(r, g, b));         // Moderately bright green color.
   } else if (characteristic.uuid() == ledRing5Characteristic.uuid()) {
     r = ledRing5Characteristic[0];
     g = ledRing5Characteristic[1];
     b = ledRing5Characteristic[2];
-    pixels.setPixelColor(4, pixels.Color(r, g, b));       // Moderately bright green color.
+    pixels.setPixelColor(4, pixels.Color(r, g, b));         // Moderately bright green color.
   } else if (characteristic.uuid() == ledRing6Characteristic.uuid()) {
     r = ledRing6Characteristic[0];
     g = ledRing6Characteristic[1];
     b = ledRing6Characteristic[2];
-    pixels.setPixelColor(5, pixels.Color(r, g, b));       // Moderately bright green color.
+    pixels.setPixelColor(5, pixels.Color(r, g, b));         // Moderately bright green color.
   } else if (characteristic.uuid() == ledRing7Characteristic.uuid()) {
     r = ledRing7Characteristic[0];
     g = ledRing7Characteristic[1];
     b = ledRing7Characteristic[2];
-    pixels.setPixelColor(6, pixels.Color(r, g, b));       // Moderately bright green color.
+    pixels.setPixelColor(6, pixels.Color(r, g, b));         // Moderately bright green color.
   } else if (characteristic.uuid() == ledRing8Characteristic.uuid()) {
     r = ledRing8Characteristic[0];
-    g = ledRing8Characteristic[1];
+    g = ledRing8Characteristic[1]; 
     b = ledRing8Characteristic[2];
-    pixels.setPixelColor(7, pixels.Color(r, g, b));       // Moderately bright green color.
+    pixels.setPixelColor(7, pixels.Color(r, g, b));         // Moderately bright green color.
   }
   pixels.show();
 }
@@ -545,4 +553,12 @@ void blePeripheralDisconnectHandler(BLEDevice central) {
   // central disconnected event handler
   Serial.print("Disconnected event, central: ");
   Serial.println(central.address());
+
+  if (servoA0.attached()) {
+    servoA0.detach();
+  }
+
+  if (servoA5.attached()) {
+    servoA5.detach();
+  }
 }
