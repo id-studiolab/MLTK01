@@ -270,7 +270,7 @@ class MLTK {
       },
       IOMODE: {
         uuid: '6fbe1da7-0101-44de-92c4-bb6e04fb0212',
-        properties: [ 'BLEWrite', 'BLERead' ],
+        properties: [ 'BLEWrite' ],
         structure: [ 'Uint8', 'Uint8' ],
         data: { A0: [], A5: [] },
         writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
@@ -279,7 +279,7 @@ class MLTK {
       },
       A0: {
         uuid: '6fbe1da7-0102-44de-92c4-bb6e04fb0212',
-        properties: [ 'BLEWrite', 'BLERead', 'BLENotofy' ],
+        properties: [ 'BLEWrite', 'BLERead', 'BLENotify' ],
         structure: [ 'Uint8' ],
         data: { A0: [] },
         writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
@@ -288,7 +288,7 @@ class MLTK {
       },
       A5: {
         uuid: '6fbe1da7-0103-44de-92c4-bb6e04fb0212',
-        properties: [ 'BLEWrite', 'BLERead', 'BLENotofy' ],
+        properties: [ 'BLEWrite', 'BLERead', 'BLENotify' ],
         structure: [ 'Uint8' ],
         data: { A5: [] },
         writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
@@ -388,7 +388,7 @@ class MLTK {
 
     this.connected = true;
     this.updateStatusMsg( 'connected.' );
-    //this.afterConnectCallback();
+    this.afterConnectCallback();
     this.getBoardStatus();
   }
 
@@ -650,7 +650,7 @@ class MLTK {
     let MLTKControls = createDiv();
     MLTKControls.id( "MLTKControls" );
 
-    let MLTKTitle = createDiv( "MLTK" );
+    let MLTKTitle = createDiv( "🤖_MLTK01" );
     MLTKTitle.class( "title" );
     MLTKTitle.parent( MLTKControls );
 
@@ -798,10 +798,33 @@ class MLTK {
   ////////////////////////////////////////////////
 
   setIO( id, mode ) {
+
+    let A0Mode = this.boardProperties.IOMODE.data.A0[ 0 ];
+    let A5Mode = this.boardProperties.IOMODE.data.A5[ 0 ];
+
     if ( id == A0 ) {
-      this.boardProperties.IOMODE.data.A0[ 0 ] = mode;
+      A0Mode = mode;
     } else if ( id == A5 ) {
-      this.boardProperties.IOMODE.data.A5[ 0 ] = mode;
+      A5Mode = mode;
+    }
+
+    var newData = Uint8Array.of( A0Mode, A5Mode );
+
+    this.boardProperties[ 'IOMODE' ].writeValue = newData;
+    this.BLEwriteTo( 'IOMODE' );
+  }
+
+  writeToIO( id, val ) {
+    let data = new Uint8Array( [ val ] )
+
+    if ( id == A0 ) {
+      this.boardProperties[ 'A0' ].writeValue = data;
+      this.BLEwriteTo( 'A0' );
+
+    } else if ( id == A5 ) {
+      this.boardProperties[ 'A5' ].writeValue = data;
+      this.BLEwriteTo( 'A5' );
+
     }
   }
 
@@ -893,6 +916,10 @@ class MLTK {
    */
   getActiveClass() {
     return ( mltk.boardProperties.class.data.class[ this.boardProperties.class.maxRecords - 1 ] );
+  }
+
+  getEncoderValue() {
+    return ( mltk.boardProperties.encoder.data.encoder[ this.boardProperties.class.maxRecords - 1 ] );
   }
 
   /**

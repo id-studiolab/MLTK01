@@ -1,5 +1,5 @@
 body{
-  font-family: sans-serif;
+  font-family: 'Roboto Mono', monospace;
   padding: 0px;
   margin: 0px;
 }
@@ -10,21 +10,23 @@ body{
   position: relative;
   width: 100%;
   z-index: 100;
-  background-color: #5d35e8;
+  background-color:   #242129;
 }
 
 #MLTKControls{
-  padding-top: 14px;
+  padding-top: 10px;
   color: white;
 }
 
 #MLTKControls button{
-  background-color: #ffE970;
-  border: none;
-  height: 30px;
-  border-radius: 2px;
-  margin-left: 10px;
-  margin-top: -15px;
+  background-color: #FFFF0B;
+      border: none;
+      height: 30px;
+      border-radius: 2px;
+      margin-right: 10px;
+      font-family: 'Roboto Mono', monospace;
+      font-size: 10px;
+      float: right;
 }
 
 #MLTKControls .title{
@@ -37,7 +39,6 @@ body{
 }
 
 #sketchContainer{
-  padding-top: 50px;
   display: block;
   position: relative;
 }
