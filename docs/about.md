@@ -16,7 +16,7 @@ The board comes pre-flashed with a custom firmware which exposes the board bluet
 
 
 ## MLTK BOARD
-![MLTK Board](../assets/board_components.png "MLTK01 Board")
+![MLTK Board]({{ site.baseurl}}/assets/board_components.png "MLTK01 Board")
 
 The mltk board is based on the [Aarduino Nano 33 BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense){:target="_blank"}, a small Arduino board equipped with a wide range of embedded sensors:
 - **9 axis inertial sensor:** what makes this board ideal for wearable devices

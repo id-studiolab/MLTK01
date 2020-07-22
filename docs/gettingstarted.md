@@ -21,7 +21,7 @@ You can write the code in your favourite editor or use the handy online [p5.js e
 ## 2. project structure
 As any other p5.js sketch you will need to create two main files for your project: index.html and sketch.js
 
-![alt text](./assets/file-structure.png "file structure")
+![alt text]({{ site.baseurl}}/assets/file-structure.png "file structure")
 
 
 ## 3. Importing Libraries
@@ -138,7 +138,7 @@ function play() {
 ```
 By pressing the connect button a popup will appear inviting the user to select ble device to connect to. Don't do anything yet... we will get to it soon. Of course this imply that you have the bluetooth enabled on your device.
 
-![MLTK UI](./assets/connect-button.png "connect UI")
+![MLTK UI]({{ site.baseurl}}/assets/connect-button.png "connect UI")
 
 ## 6. Training the sketch
 Now that most of our code skeleton is ready, we can look more in depth at the MLTK api and in particular at the training function.

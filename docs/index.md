@@ -7,7 +7,7 @@ MLTK01 is an open-source toolkit for fast prototyping _tangible learning things_
 {: .fw-300 .fs-6 }
 
 <br>
-![alt text](./assets/toolkit.jpg "toolkit")
+![alt text]({{ site.baseurl}}/assets/toolkit.jpg "toolkit")
 <br>
 
 Simply plug, train and play machine learning sketches.

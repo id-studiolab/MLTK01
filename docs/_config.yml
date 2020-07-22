@@ -10,6 +10,8 @@ search_enabled: true
 
 color_scheme: dark
 
+baseurl: /MLTK01
+
 aux_links:
     "Contribute to the project on github":
       - "https://github.com/id-studiolab/MLTK01"
