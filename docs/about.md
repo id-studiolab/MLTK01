@@ -12,7 +12,7 @@ The toolkit is made of:
 - A set of example that will help you to get started.
 
 The board comes pre-flashed with a custom firmware which exposes the board bluetooth property and it's intended to function in combination with a webpage running a js sketch which includes the MLTK01 library.
-<span class="higlight">You won't have to write a line of Arduino code, the main logic of your code will be some js running in the browser just like [p5.js](https://p5js.org/) sketches.</span>
+<span class="highlight">You won't have to write a line of Arduino code, the main logic of your code will be some js running in the browser just like [p5.js](https://p5js.org/) sketches.</span>
 
 
 ## MLTK BOARD
