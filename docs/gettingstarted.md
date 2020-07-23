@@ -142,6 +142,9 @@ By pressing the connect button a popup will appear inviting the user to select b
 
 ## 6. Training the sketch
 Now that most of our code skeleton is ready, we can look more in depth at the MLTK api and in particular at the training function.
+
+![how to]({{ site.baseurl}}/assets/howto.png "How to use the mltk board")
+
 Firs of all let's shortly recap the main training logic of the toolkit:
 - When we are in train mode we can classify data coming from the MLTK board into 8 different classes.
 - We can select a specific class by turning the rotary encoder on the board
@@ -232,3 +235,10 @@ We are now ready to run the sketch and play with it:
 6. set the mode switch to play mode and
 7. see the result of the classification on the board and on the screen
 8. Hurray!
+
+## 10. Get creative!
+You are now redy to get creative and explore all the fucntionalities of the library.
+
+Explore the example sections to find more inspirations and have a look at the api page for a list of all the library features.
+
+You can always start your projects by duplicating this simple [boilerplate sketch](https://editor.p5js.org/10r3n20/sketches/Ttccl7mKL)

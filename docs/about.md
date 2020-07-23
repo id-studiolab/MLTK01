@@ -14,7 +14,6 @@ The toolkit is made of:
 The board comes pre-flashed with a custom firmware which exposes the board bluetooth property and it's intended to function in combination with a webpage running a js sketch which includes the MLTK01 library.
 <span class="highlight">You won't have to write a line of Arduino code, the main logic of your code will be some js running in the browser just like [p5.js](https://p5js.org/) sketches.</span>
 
-
 ## MLTK BOARD
 ![MLTK Board]({{ site.baseurl}}/assets/board_components.png "MLTK01 Board")
 
@@ -35,6 +34,11 @@ The Arduino Nano 33 BLE comes soldered on the bottom of the MLTK01 board and ext
 - **2 Grove connector** to attach external sensor and actuators (limited at the moment, you will need to modify the firmware and the library to interface this with external hardware)
 
 ![Board schematics](https://raw.githubusercontent.com/id-studiolab/MLTK01/master/board/circuit.png "MLTK01 Board Schematics")
+
+The MLTK01 board can be easily reproduced on a breadboard as shown in the picture below.
+
+![breadboard view]({{ site.baseurl}}/assets/breadboard.png "MLTK01 Breadboard version")
+
 
 The Board serves as a gateway to the physical world and doesn't do any machine learning Algoritm, most of the processing is in fact done on a computer (or smartphone) in a browser running a webpage which uses the MLTK library to interface with the board.
 The Board and the browser are connected trough BLE (Bluetooth Low Energy)
