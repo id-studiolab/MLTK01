@@ -1,10 +1,13 @@
 //create a variable to store the mltk object
 let mltk;
 //this variable will be used to store the active class label
-let activeClass = "";
-let lastActiveClass = "";
+let activeClass;
+let lastActiveClass;
 
-let sounds = new Array( 8 );
+let direction = 0;
+
+let ballPosition={}
+let acceleration=0
 
 function setup() {
   //inizialize the mltk object passing the two callback functions used fot training and play mode
@@ -16,32 +19,64 @@ function setup() {
   // creating the canvas fter the control interface makes the bar appear on top.
   createCanvas( windowWidth, windowHeight - 50 );
 
-  sounds[ 0 ] = loadSound( "./assets/are_you_ready.mp3" )
-  sounds[ 1 ] = loadSound( "./assets/baby_baby_baybeh.mp3" )
-  sounds[ 2 ] = loadSound( "./assets/burnlikefire.mp3" )
-  sounds[ 3 ] = loadSound( "./assets/bwaaaow_chorus.mp3" )
-  sounds[ 4 ] = loadSound( "./assets/cmon.mp3" )
-  sounds[ 5 ] = loadSound( "./assets/opera_diva.mp3" )
-  sounds[ 6 ] = loadSound( "./assets/my-luv-uv-uv-uv-uv-in.mp3 " )
-  sounds[ 7 ] = loadSound( "./assets/ohh-hoo_yeah.mp3" )
+  ballPosition.x=width/2
+  ballPosition.y=height/2
 };
 
 function draw() {
   // the draw function only draws the active class to the canvas
-  background( '#f8db40' );
-  textAlign( CENTER );
-  textSize( 100 );
-  textStyle( BOLD );
-  fill( "#5d35e8" );
-  if ( activeClass != null ) {
-    text( "...", width / 2, height / 2 );
-  }
-  text( activeClass, width / 2, height / 2 );
+  background( '#101010' );
+  textAlign( LEFT );
+  textSize( 20 );
+  fill( "#df317a" );
+  drawActiveClass();
+  updateBallPosition();
+  drawBall();
 
-  if ( activeClass != lastActiveClass ) {
-    sounds[ activeClass ].play();
-    lastActiveClass = activeClass;
+}
+
+function drawActiveClass(){
+    text( "active class: " + activeClass, 20, 30 );
+}
+
+function drawBall(){
+  ellipse (ballPosition.x,ballPosition.y,50,50)
+}
+
+function keyTyped() {
+  if (key === '0') {
+  ballPosition.x=width/2
+  } else if (key === '1') {
+    activeClass = 3;
+  } else if (key === '2') {
+    activeClass = 1;
   }
+}
+
+
+function updateBallPosition(){
+  switch (activeClass) {
+    case 0:
+      acceleration = 0
+      break;
+    case 1:
+      acceleration = -1
+      break;
+    case 2:
+      acceleration = -2
+      break;
+    case 7:
+      acceleration = 1
+      break;
+    case 6:
+      acceleration = 2
+      break;
+    default:
+      acceleration=0
+      break;
+  }
+  ballPosition.x+=acceleration
+  console.log(activeClass,acceleration)
 }
 
 //this functions will be run in loop when you are in train mode and the record button is pressed
@@ -66,7 +101,7 @@ function gotResults( err, result ) {
     console.log( err );
   } else {
     //take the name of the label identified and store it in the global variable activeClass
-    activeClass = result.label;
+    activeClass = parseInt(result.label);
     play();
   }
 }
