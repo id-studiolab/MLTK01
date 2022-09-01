@@ -42,6 +42,3 @@ The MLTK01 board can be easily reproduced on a breadboard as shown in the pictur
 
 The Board serves as a gateway to the physical world and doesn't do any machine learning Algoritm, most of the processing is in fact done on a computer (or smartphone) in a browser running a webpage which uses the MLTK library to interface with the board.
 The Board and the browser are connected trough BLE (Bluetooth Low Energy)
-
-<iframe src="https://player.vimeo.com/video/654463896?h=946aaf31ad" width="640" height="360" frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen></iframe>
-<p><a href="https://vimeo.com/654463896">MLTK01</a> from <a href="https://vimeo.com/user29674363">maria luce</a> on <a href="https://vimeo.com">Vimeo</a>.</p>
