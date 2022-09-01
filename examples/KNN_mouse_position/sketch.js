@@ -1,3 +1,7 @@
+// a simple sketch which uses the knn classifier to classify a bunch of mouse cohordinates.
+// this algorithme is often wrapped in other function provided by the mltk library
+// based on a coding train episode
+
 const knnClassifier = ml5.KNNClassifier();
 let featureExtractor;
 

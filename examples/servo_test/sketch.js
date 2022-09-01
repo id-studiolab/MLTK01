@@ -1,3 +1,5 @@
+//simple sketch to test if a servo motor could run together with the mltk stack
+
 //create a variable to store the mltk object
 let mltk;
 //this variable will be used to store the active class label
