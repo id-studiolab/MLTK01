@@ -17,6 +17,7 @@ you will only need the 🤖MLTK01 board and a web browser.
 <span class="highlight">currently the web bluetooth api are only supported by Google Chrome so please make sure to run your code with that</span>
 
 You can write the code in your favourite editor or use the handy online [p5.js editor](https://editor.p5js.org/).
+<span class="highlight">!!!UPDATE Unfortunately after an update to the BLE library it is not possible to start a BLE connection from within an IFrame. Because of this the sketches are not working in using the p5.js web editor anymore. It is recommended to use Atom or VSCode and run a live server program to test the example and develop new code.  </span>
 
 ## 2. project structure
 As any other p5.js sketch you will need to create two main files for your project: index.html and sketch.js
