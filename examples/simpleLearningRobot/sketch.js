@@ -32,13 +32,15 @@ let mltk;
 let isTraned=false;
 let trainStarted=false;
 
+let lastLabel;
+
 function setup() {
-  var canvas = createCanvas(640, 480);
+  var canvas = createCanvas( windowWidth, windowHeight - 50 );
 
   canvas.parent('sketchContainer');
 
   //inizialize the mltk object passing the two callback functions used for training and play mode
-  mltk = new MLTK (train, play);
+  mltk = new MLTK (train, play, onConnect);
   mltk.trainContinuosly=false;
 
   //add a button to initialize the connection
@@ -55,46 +57,40 @@ function setup() {
 
   mobilenet = ml5.featureExtractor('MobileNet', modelReady);
   // Create a new classifier using those features and give the video we want to use
-  const options = { numLabels: 3 };
+  const options = { numLabels: 8 };
   classifier = mobilenet.classification(video, options, videoReady);
-
-  class1Btn = createButton("Luce");
-  class1Btn.mousePressed(function() {
-    classifier.addImage("Luce")
-  });
-
-  class2Btn = createButton("Lorenzo");
-  class2Btn.mousePressed(function() {
-    classifier.addImage("Lorenzo")
-  });
-
-
-  trainButton = createButton("train");
-  trainButton.mousePressed(function() {
-    classifier.train(whileTraining);
-  });
-
-
-  runButton = createButton("run");
-  runButton.mousePressed(function() {
-    classifier.classify(gotResults);
-  });
-
-
-  saveBtn= createButton("save model");
-  saveBtn.mousePressed(function(){
-    classifier.save();
-  })
 }
 
 function draw() {
   background(0);
-  image(video, 0, 0, 640, 480);
+  imageMode(CENTER);
+  image(video, width/2, height/2, 640, 480);
   fill(255);
   textSize(20);
   text(label, 10, height - 50);
   text(prob, 10, height - 25);
+
+  rotateServoWithClass()
 }
+
+function rotateServoWithClass(){
+  if (mltk.isConnected() ){
+    label =mltk.getActiveClass()
+    moveServo();
+
+  }
+}
+
+function onConnect() {
+  mltk.setIO( A0, SERVO );
+  console.log( "initiated Servo" );
+}
+
+function moveServoToPosition(index){
+  let servoposition=180-floor((180/7)*index);
+  mltk.writeToIO( A0,servoposition );
+}
+
 
 function modelReady() {
   console.log("model is ready");
@@ -116,7 +112,7 @@ function whileTraining(loss) {
 }
 
 function train() {
-  let label = mltk.getActiveClass();
+  label = mltk.getActiveClass();
   classifier.addImage(label);
   console.log("adding sample to label: "+label)
   isTraned=false;
@@ -136,11 +132,25 @@ function gotResults(error, results) {
   if (error) {
     console.error(error);
   } else {
-    console.log(results);
+    //console.log(results);
     label = results[0].label;
     prob = results[0].confidence;
-    if mltk.isPlayModeActive(){
-      play();
+    //console.log (label)
+    console.log (mltk.isPlayModeActive())
+    moveServo()
+    mltk.setClass(parseInt(label))
+    if (mltk.isPlayModeActive()){
+      //need this little delay here to give enough time to the BLE to update it's properties
+      setTimeout(function(){
+        play();
+      },100)
     }
+  }
+}
+
+function moveServo(){
+  if (lastLabel!=label){
+    moveServoToPosition(parseInt(label))
+    lastLabel=label
   }
 }

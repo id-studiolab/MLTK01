@@ -425,7 +425,7 @@ class MLTK {
 
 
       if ( sensor.uuid == this.boardProperties.mode.uuid ) {
-
+        console.log("changing mode")
         if ( this.isTrainModeActive() ) {
           this.stopClassification();
         } else {
@@ -804,6 +804,7 @@ class MLTK {
   ///////////                       //////////////
   ////////////////////////////////////////////////
 
+  setIO( id, mode ) {
 
     let A0Mode = this.boardProperties.IOMODE.data.A0[ 0 ];
     let A5Mode = this.boardProperties.IOMODE.data.A5[ 0 ];

@@ -76,7 +76,7 @@ function updateBallPosition(){
       break;
   }
   ballPosition.x+=acceleration
-  console.log(activeClass,acceleration)
+  //console.log(activeClass,acceleration)
 }
 
 //this functions will be run in loop when you are in train mode and the record button is pressed
