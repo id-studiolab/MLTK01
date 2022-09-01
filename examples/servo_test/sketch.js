@@ -33,14 +33,16 @@ function draw() {
 }
 
 let servoposition = 0;
-let servodirection = 1;
+let servoSpeed = 5;
 
 function servosweepUpdate() {
-  servoposition += servodirection;
-  if ( servoposition == 180 || servoposition == 0 ) {
-    servodirection *= -1;
+  servoposition += servoSpeed;
+  if ( servoposition > 180 || servoposition < 0 ) {
+    servoSpeed *= -1;
   }
-  mltk.writeToIO( A0, mltk.getEncoderValue() );
+  servoposition=constrain(servoposition,0,180)
+  mltk.writeToIO( A0,servoposition );
+  console.log(servoposition)
 }
 
 function onConnect() {

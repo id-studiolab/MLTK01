@@ -299,6 +299,11 @@ class MLTK {
 
     //register the function used for training
     this.trainFunction = trainfn;
+
+    this.trainContinuosly= true;
+    this.disableMLTKClassification= false;
+
+
     //register the function used fot the classification
     this.playFunction = classifyfn;
 
@@ -420,7 +425,7 @@ class MLTK {
 
 
       if ( sensor.uuid == this.boardProperties.mode.uuid ) {
-
+        console.log("changing mode")
         if ( this.isTrainModeActive() ) {
           this.stopClassification();
         } else {
@@ -534,12 +539,14 @@ class MLTK {
   }
 
   train() {
-    if ( !this.stopTrainingFlag ) {
-      this.trainFunction();
-      setTimeout( () => {
-        this.train();
-      }, trainClassifyInterval );
-    }
+      if ( !this.stopTrainingFlag ) {
+        this.trainFunction();
+        if (this.trainContinuosly){
+          setTimeout( () => {
+            this.train();
+          }, trainClassifyInterval );
+        }
+      }
   }
 
   /**
