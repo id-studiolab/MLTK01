@@ -5,7 +5,7 @@ nav_order: 2
 ---
 
 ### Game controller
-![alt text]({{ site.baseurl}}/game-controller.gif "game controller")
+![alt text]({{ site.baseurl}}/assets/game-controller.gif "game controller")
 
 TRAIN MODE: Train the board to recognise 2 different gestures using the Arduino's magnetometer
 
