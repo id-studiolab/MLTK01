@@ -6,22 +6,19 @@ nav_order: 1
 
 # Getting started
 
-this guide will walk you trough the basics steps you will need to take to create you firts MLTK01 project.
+This guide will walk you through the steps of creating your first MLTK01 sketch.
 
 ## 0. Prerequisites
 
-If you never had experience with writing a p5.js sketch or any js code I higly reccommend to get familiar it before getting started with this. [Watch a couple of this videos and you will be ready to go](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy51Q-x9tMWIv9cueOFTFA).
+If you have no previous experience creating a sketch using P5.js or working in JavaScript, I recommend you get familiar with the process before this tutorial. [This Youtube playlist](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy51Q-x9tMWIv9cueOFTFA) from The Coding Train is a good place to start.
 
 ## 1. Tools
 
-you will only need the 🤖MLTK01 board and a web browser.
+For this tutorial, you will only need the 🤖MLTK01 board and a web browser. <span class="highlight">Currently the web bluetooth api is only supported by Google Chrome so please make sure to run your code with that.</span>
 
-<span class="highlight">currently the web bluetooth api are only supported by Google Chrome so please make sure to run your code with that</span>
+You can write your code in your favorite editor (like Atom or VSCode) or use the online [p5.js editor](https://editor.p5js.org/).
 
-You can write the code in your favourite editor or use the handy online [p5.js editor](https://editor.p5js.org/).
-<span class="highlight">!!!UPDATE Unfortunately after an update to the BLE library it is not possible to start a BLE connection from within an IFrame. Because of this the sketches are not working in using the p5.js web editor anymore. It is recommended to use Atom or VSCode and run a live server program to test the example and develop new code. </span>
-
-## 2. project structure
+## 2. Project Structure
 
 As any other p5.js sketch you will need to create two main files for your project: index.html and sketch.js
 
