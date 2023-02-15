@@ -2,7 +2,7 @@
 #include <Arduino_APDS9960.h>
 #include <Arduino_HS300x.h>
 #include <Arduino_LPS22HB.h>
-#include "Arduino_BMI270_BMM150.h"
+#include <Arduino_BMI270_BMM150.h>
 #include <PDM.h>
 #include <ArduinoBLE.h>
 
@@ -102,10 +102,11 @@ void setup() {
   init_record_button();
   init_encoder();
 
-  Serial.begin (115200);
+  Serial.begin(115200);
   delay(1000);
 
-  while (!Serial);
+
+  while (!Serial); // use for debugging.
   Serial.println("Started");
 
   if (!APDS.begin()) {
