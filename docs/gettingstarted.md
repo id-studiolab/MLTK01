@@ -183,32 +183,35 @@ Keep in mind that <span class="highlight">we can pass any multidimensional array
 ## 7. Entering play mode
 
 Now that we covered most of the things that we need to know about the train function we can look at what should happen with the play function.
-Similarly to the Train function also the play function is invoked automatically when the board is connected and the mode switch is on "play". In play mode we don't have to use any button to read new datas, the function will be automatically invoked in loop.
 
-Similarly to the train function the play function will need to perform a series of actions:
+Similarly to the train function, the play function is invoked automatically when the board is connected and the mode is set to "play". In play mode, we don't have to use any button to read new data; the play function is invoked automatically in a loop.
 
-- Read some data from the sensors;
-- Run the classification algorithm on the data to identify to which trained class the data from the sensor is closest to
-- light up the corrisponding led on the mltk board.
+The general logic of play mode is:
 
-All this again is done in a few lines of code:
+1. Read data from the sensors
+1. Run the classification algorithm on the data to identify to which trained class the data from the sensor is closest to.
+1. Light up the corresponding LED on the MLTK board.
+   Similarly to the train function the play function will need to perform a series of actions:
+
+In code, this logic looks like:
 
 ```javascript
-//this function will be run in loop when you are in play mode
+// this function will run in a loop when you are in play mode.
 function play() {
-  //get the data you want to "classify"
+  // get the data you want to "classify"
   let features = mltk.getMagnetometerData();
-  //pass the data to the function who does the classification, once done call the "gotResults" callback function
+
+  // pass the data to the function who does the classification, once done call the "gotResults" callback function
   mltk.classify(features, gotResults);
 }
 
-activeClass = 0;
+let activeClass = 0;
 
 function gotResults(err, result) {
   if (err) {
     console.log(err);
   } else {
-    //take the name of the label identified and store it in the global variable activeClass
+    // take the name of the label identified and store it in the global variable activeClass
     activeClass = result.label;
     play();
   }
@@ -217,18 +220,16 @@ function gotResults(err, result) {
 
 Notice that the `mltk.classify( features, gotResults )` function takes two arguments:
 
-- A multidimentional array representing a features
-- And a callback fucntion that will be invoked once the classify function will be done running the data trought the created model.
+- A multidimensional array representing a feature
+- And a callback function that will be invoked once the classify function will be done running the data through the created model.
 
-In the code snippet above we added this `gotResults( err, result )` which will be invoked when the classification will be done. The result objects returned by the callback will return the label we used for the training, as well as the probability that the given features belongs to that label.
+In the code snippet above, `gotResults( err, result )` will be invoked when the classification will be done. The result objects returned by the callback will return the label we used for the training, as well as the probability that the given features belongs to that label.
 
-The library will automatically turn on the appropriate led from the led ring on the board, but to do something with the data it is handy to save the retured label into a global variable. I the code snippet above this is called `activeClass`
+The library will automatically turn on the appropriate LED from the LED ring on the board, but to do something with the data being classified it is handy to save the returned label into a global variable. In the code snippet above this global variable is `activeClass`
 
 ## 8. Visualize the label on screen
 
 At this stage the sketch should already be able to interface with the board, train some features and visualize the result from the classification when in play mode. However, to make the example code a bit more complete let's also visualize the selected label on screen.
-
-This can be easily done with a few calls to the p5.js api inside the `draw()` function
 
 ```javascript
 function draw() {
@@ -246,17 +247,17 @@ We are now ready to run the sketch and play with it:
 
 1. Press the connect button on the interface
 2. Enter train mode by toggling the mode switch
-3. select a class with the rotary encoder and record some samples
-4. change the board orientation
-5. select a second class and record some more sample
-6. set the mode switch to play mode and
-7. see the result of the classification on the board and on the screen
+3. Select a class with the rotary encoder and record some samples
+4. Change the board orientation
+5. Select a second class and record some more sample
+6. Set the mode switch to play mode and
+7. See the result of the classification on the board and on the screen
 8. Hurray!
 
 ## 10. Get creative!
 
-You are now redy to get creative and explore all the fucntionalities of the library.
+You are now ready to get creative and explore all the functionalities of the library.
 
-Explore the example sections to find more inspirations and have a look at the api page for a list of all the library features.
+Explore the [examples section](examples.html) to find more inspirations and have a look at the api page for a list of all the library features.
 
 You can always start your projects by duplicating this simple [boilerplate sketch](https://editor.p5js.org/10r3n20/sketches/Ttccl7mKL)
