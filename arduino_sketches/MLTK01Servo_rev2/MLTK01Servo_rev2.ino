@@ -106,7 +106,7 @@ void setup() {
   delay(1000);
 
 
-  while (!Serial); // use for debugging.
+  //while (!Serial); // use for debugging.
   Serial.println("Started");
 
   if (!APDS.begin()) {
