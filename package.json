@@ -10,9 +10,6 @@
   "dependencies": {
     "jsdoc-to-markdown": "^8.0.0"
   },
-  "devDependencies": {
-    "gulp": "^4.0.2"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "docs": "jsdoc2md library/*.js > docs/api.md --template docs/api-template.hbs"
