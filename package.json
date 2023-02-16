@@ -8,7 +8,7 @@
     "example": "examples"
   },
   "dependencies": {
-    "jsdoc-to-markdown": "^5.0.3"
+    "jsdoc-to-markdown": "^8.0.0"
   },
   "devDependencies": {
     "gulp": "^4.0.2"

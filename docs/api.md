@@ -11,11 +11,12 @@ nav_order: 5
 **Kind**: global class  
 
 * [MLTK](#MLTK)
-    * [new MLTK(TrainFunction, PlayFunction)](#new_MLTK_new)
+    * [new MLTK(TrainFunction, PlayFunction, [onConnect], [onDisconnect])](#new_MLTK_new)
     * _ML_
         * [.addTrainingData(label, features)](#MLTK+addTrainingData)
         * [.classify(features, callback)](#MLTK+classify)
     * _MLTK BOARD API_
+        * [.isConnected()](#MLTK+isConnected) ⇒ <code>boolean</code>
         * [.isTrainModeActive()](#MLTK+isTrainModeActive) ⇒ <code>boolean</code>
         * [.isPlayModeActive()](#MLTK+isPlayModeActive) ⇒ <code>boolean</code>
         * [.isRecordButtonPressed()](#MLTK+isRecordButtonPressed) ⇒ <code>boolean</code>
@@ -33,7 +34,7 @@ nav_order: 5
 
 <a name="new_MLTK_new"></a>
 
-### new MLTK(TrainFunction, PlayFunction)
+### new MLTK(TrainFunction, PlayFunction, [onConnect], [onDisconnect])
 MLTK main class
 
 
@@ -41,6 +42,8 @@ MLTK main class
 | --- | --- | --- |
 | TrainFunction | <code>function</code> | The function used for the training |
 | PlayFunction | <code>function</code> | The function used in play mode |
+| [onConnect] | <code>function</code> | The function to be called after the boards connects |
+| [onDisconnect] | <code>function</code> | The function to be called after the board disconnects |
 
 **Example**  
 ```js
@@ -137,6 +140,14 @@ function play() {
    }
  }
 ```
+<a name="MLTK+isConnected"></a>
+
+### mltk.isConnected() ⇒ <code>boolean</code>
+returns true if the mltk board is connected
+
+**Kind**: instance method of [<code>MLTK</code>](#MLTK)  
+**Returns**: <code>boolean</code> - TRUE when MLTK board is connected  
+**Category**: MLTK BOARD API  
 <a name="MLTK+isTrainModeActive"></a>
 
 ### mltk.isTrainModeActive() ⇒ <code>boolean</code>
