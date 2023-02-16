@@ -107,7 +107,7 @@ void setup() {
   Serial.begin(115200);
   delay(1000);
 
-  //while (!Serial);
+  //while (!Serial); // for debugging
   Serial.println("Started");
 
   if (!APDS.begin()) {
