@@ -2,8 +2,6 @@
 
 jekyll serve --livereload
 
-#to regenerate the js documentation file install the node dependencies with npm and gulp globally and run 
+#to regenerate the js documentation file install the node dependencies and run 
 
-gulp generate-doc
-
-! sometimes it gives errors, change the template and try again 
+npm run docs
