@@ -482,42 +482,42 @@ void onLedRingCharacteristicWrite(BLEDevice central, BLECharacteristic character
     r = ledRing1Characteristic[0];
     g = ledRing1Characteristic[1];
     b = ledRing1Characteristic[2];
-    pixels.setPixelColor(0, pixels.Color(r, g, b));  // Moderately bright green color.
+    pixels.setPixelColor(0, pixels.Color(r, g, b));
   } else if (characteristic.uuid() == ledRing2Characteristic.uuid()) {
     r = ledRing2Characteristic[0];
     g = ledRing2Characteristic[1];
     b = ledRing2Characteristic[2];
-    pixels.setPixelColor(1, pixels.Color(r, g, b));  // Moderately bright green color.
+    pixels.setPixelColor(1, pixels.Color(r, g, b));
   } else if (characteristic.uuid() == ledRing3Characteristic.uuid()) {
     r = ledRing3Characteristic[0];
     g = ledRing3Characteristic[1];
     b = ledRing3Characteristic[2];
-    pixels.setPixelColor(2, pixels.Color(r, g, b));  // Moderately bright green color.
+    pixels.setPixelColor(2, pixels.Color(r, g, b));
   } else if (characteristic.uuid() == ledRing4Characteristic.uuid()) {
     r = ledRing4Characteristic[0];
     g = ledRing4Characteristic[1];
     b = ledRing4Characteristic[2];
-    pixels.setPixelColor(3, pixels.Color(r, g, b));  // Moderately bright green color.
+    pixels.setPixelColor(3, pixels.Color(r, g, b));
   } else if (characteristic.uuid() == ledRing5Characteristic.uuid()) {
     r = ledRing5Characteristic[0];
     g = ledRing5Characteristic[1];
     b = ledRing5Characteristic[2];
-    pixels.setPixelColor(4, pixels.Color(r, g, b));  // Moderately bright green color.
+    pixels.setPixelColor(4, pixels.Color(r, g, b));
   } else if (characteristic.uuid() == ledRing6Characteristic.uuid()) {
     r = ledRing6Characteristic[0];
     g = ledRing6Characteristic[1];
     b = ledRing6Characteristic[2];
-    pixels.setPixelColor(5, pixels.Color(r, g, b));  // Moderately bright green color.
+    pixels.setPixelColor(5, pixels.Color(r, g, b));
   } else if (characteristic.uuid() == ledRing7Characteristic.uuid()) {
     r = ledRing7Characteristic[0];
     g = ledRing7Characteristic[1];
     b = ledRing7Characteristic[2];
-    pixels.setPixelColor(6, pixels.Color(r, g, b));  // Moderately bright green color.
+    pixels.setPixelColor(6, pixels.Color(r, g, b));
   } else if (characteristic.uuid() == ledRing8Characteristic.uuid()) {
     r = ledRing8Characteristic[0];
     g = ledRing8Characteristic[1];
     b = ledRing8Characteristic[2];
-    pixels.setPixelColor(7, pixels.Color(r, g, b));  // Moderately bright green color.
+    pixels.setPixelColor(7, pixels.Color(r, g, b));
   }
   pixels.show();
 }
