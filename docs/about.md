@@ -31,7 +31,7 @@ The MLTK board is based on the [Aarduino Nano 33 BLE Sense](https://store.arduin
 
 For a full list of the Arduino Nano BLE sense features refer to [the official documentation](https://store.arduino.cc/arduino-nano-33-ble-sense){:target="\_blank"}.
 
-The Arduino Nano 33 BLE comes soldered on the bottom of the MLTK01 board and extends its functionality by providing an easy interface to interact with the Machine Learning library. The interface features:
+The MLTK Board has a socket to accomodate the Arduino Nano 33 BLE Sense and extends its functionality by providing an easy interface to interact with the Machine Learning library. The interface features:
 
 - **A train/play switch** to go from train mode to play mode and vice versa
 - **A rotary encoder** for selecting the class to train

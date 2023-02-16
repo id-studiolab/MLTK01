@@ -19,8 +19,8 @@ This toolkit allows designers to cut out hardware prototyping time and <span cla
 
 As we strive for open approaches to education, <span class="highlight">we combined hardware and software from two existing open source tools: Arduino and ml5js</span>.
 
-- An [Arduino nano BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense) sits on the back of the MLTK01 PCB, functioning as a tangible interface. It allows you to simply plug, train and play with machine learning sketches.
-- The MLTK01 library extends the [ml5js](https://ml5js.org/) javascript library with a rich set of api to connect the browser with the board through [web ble api](https://webbluetoothcg.github.io/web-bluetooth/), facilitating the process of reading sensors and controlling the physical actuators connected to the board.
+- An [Arduino nano BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense) is connected to the MLTK01 PCB, functioning as a tangible interface. It allows you to simply plug, train and play with machine learning sketches.
+- The MLTK01 library extends the [ml5js](https://ml5js.org/) javascript library with a rich set of API to connect the browser with the board through [web ble api](https://webbluetoothcg.github.io/web-bluetooth/), facilitating the process of reading sensors and controlling the physical actuators connected to the board.
 
 ### MLTK01 presented @ IASDR21
 
