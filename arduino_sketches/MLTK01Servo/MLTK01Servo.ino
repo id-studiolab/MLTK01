@@ -104,7 +104,7 @@ void setup() {
   init_record_button();
   init_encoder();
 
-  Serial.begin(115200);
+  // Serial.begin(115200);
   delay(1000);
 
   //while (!Serial); // for debugging
