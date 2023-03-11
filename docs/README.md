@@ -1,7 +1,9 @@
-#run the documentation locally
+# README - DOCS
 
-jekyll serve --livereload
+## run the documentation locally
 
-#to regenerate the js documentation file install the node dependencies and run 
+`jekyll serve --livereload`
 
-npm run docs
+## To regenerate the js documentation file install the node dependencies and run
+
+`npm run docs`

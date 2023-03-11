@@ -14,7 +14,8 @@ The toolkit is made up of:
 - A software library,
 - A set of examples that will help you to get started.
 
-The board comes pre-flashed[^1] with a custom firmware which exposes the board bluetooth property and it is intended to function in combination with a webpage running a JavaScript sketch file that includes the MLTK01 library.
+<!-- The board comes pre-flashed with a custom firmware which exposes the board bluetooth property and it is intended to function in combination with a webpage running a JavaScript sketch file that includes the MLTK01 library. -->
+
 <span class="highlight">You won't have to write a line of Arduino code. The main logic of your code will be JavaScript running in the browser just like [p5.js](https://p5js.org/) sketches.</span>
 
 ## MLTK BOARD
@@ -45,9 +46,8 @@ The MLTK01 board can be easily reproduced on a breadboard as shown in the pictur
 
 ![breadboard view]({{ site.baseurl }}/assets/breadboard.png 'MLTK01 Breadboard version')
 
-The board serves as a gateway to the physical world and does not do any processing of machine learning algorithms. Most of the processing is in fact done on a computer (or smartphone) in a browser running a webpage that uses the MLTK library to interface with the board. The board and the browser are connected through BLE[^2].
+The board serves as a gateway to the physical world and does not do any processing of machine learning algorithms. Most of the processing is in fact done on a computer (or smartphone) in a browser running a webpage that uses the MLTK library to interface with the board. The board and the browser are connected through Bluetooth Low Energy (BLE).
 
 ## Notes
 
 [^1]: "pre-flashed" means the board is @@.
-[^2]: "BLE" stands for Bluetooth Low Energy.
