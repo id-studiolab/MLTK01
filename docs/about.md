@@ -22,7 +22,7 @@ The toolkit is made up of:
 
 ![MLTK Board]({{ site.baseurl}}/assets/board_components.png "MLTK01 Board")
 
-The MLTK board is based on the [Aarduino Nano 33 BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense){:target="\_blank"}, a small Arduino board equipped with a wide range of embedded sensors:
+The MLTK board is based on the [Arduino Nano 33 BLE Sense](https://store.arduino.cc/arduino-nano-33-ble-sense){:target="\_blank"}, a small Arduino board equipped with a wide range of embedded sensors:
 
 - **9 axis inertial sensor:** what makes this board ideal for wearable devices
 - **humidity, and temperature sensor:** to get highly accurate measurements of the environmental conditions
@@ -34,20 +34,16 @@ For a full list of the Arduino Nano BLE sense features refer to [the official do
 
 The MLTK Board has a socket to accomodate the Arduino Nano 33 BLE Sense and extends its functionality by providing an easy interface to interact with the Machine Learning library. The interface features:
 
-- **A train/play switch** to go from train mode to play mode and vice versa
-- **A rotary encoder** for selecting the class to train
-- **A push button** to record new data
-- **An RGB led ring** to provide feedbacks
-- **2 Grove connectors** to attach external sensors and actuators. (Limited at the moment. You will need to modify the firmware and the library to interface this with external hardware.)
+- A **train/play switch** to go from train mode to play mode and vice versa
+- A **rotary encoder** for selecting the class to train
+- A **push button** to record new data
+- An **RGB led ring** to provide feedbacks
+- Two **Grove connectors** to attach external sensors and actuators. (Limited at the moment. You will need to modify the firmware and the library to interface this with external hardware.)
 
 ![Board schematics](https://raw.githubusercontent.com/id-studiolab/MLTK01/master/board/circuit.png 'MLTK01 Board Schematics')
 
-The MLTK01 board can be easily reproduced on a breadboard as shown in the picture below.
+The MLTK01 board can be reproduced on a breadboard as shown in the picture below.
 
 ![breadboard view]({{ site.baseurl }}/assets/breadboard.png 'MLTK01 Breadboard version')
 
 The board serves as a gateway to the physical world and does not do any processing of machine learning algorithms. Most of the processing is in fact done on a computer (or smartphone) in a browser running a webpage that uses the MLTK library to interface with the board. The board and the browser are connected through Bluetooth Low Energy (BLE).
-
-## Notes
-
-[^1]: "pre-flashed" means the board is @@.
