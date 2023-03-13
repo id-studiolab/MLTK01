@@ -1,30 +1,19 @@
 ---
 layout: default
-title: getting started
+title: first sketch
 nav_order: 1
+parent: getting started
 ---
 
-# Getting started
+# Your first sketch
 
-This guide will walk you through the steps of creating your first MLTK01 sketch.
-
-## 0. Prerequisites
-
-If you have no previous experience creating a sketch using p5.js or working in JavaScript, I recommend you get familiar with the process before this tutorial. [This Youtube playlist](https://www.youtube.com/playlist?list=PLRqwX-V7Uu6Zy51Q-x9tMWIv9cueOFTFA) from The Coding Train is a good place to start.
-
-## 1. Tools
-
-For this tutorial, you will only need the 🤖MLTK01 board and a web browser. <span class="highlight">Currently the [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API) is only supported by Google Chrome so please make sure to run your sketch with that browser.</span>
-
-You can write your code in your favorite editor (like Atom or VSCode) or use the [p5.js web editor](https://editor.p5js.org/).
-
-## 2. Project Structure
+## 1. Project Structure
 
 As with any other p5.js sketch you will need to create two main files for your project: `index.html` and `sketch.js`. If you are working with the p5.js web editor, these files are already made for you.
 
 ![alt text]({{ site.baseurl}}/assets/file-structure.png "Necessary file structure for an MLTK sketch includes index.html file and a sketch.js file")
 
-## 3. Importing Libraries
+## 2. Importing Libraries
 
 To create our first sketch we will need to import a few libraries. Copy and paste the following code block into your `index.html` file.
 
@@ -49,13 +38,13 @@ To create our first sketch we will need to import a few libraries. Copy and past
       href="https://cdn.jsdelivr.net/gh/id-studiolab/MLTK01@latest/library/mltk.min.css"
     />
     <meta charset="UTF-8" />
-    <title>MLTK BOILERPLATE</title>
+    <title>MLTK boilerplate</title>
   </head>
   <body>
     <!-- These 3 divs in the body will be filled in by the library -->
     <div id="headerContainer"></div>
     <div id="sketchContainer"></div>
-    <div id="ToolsContainer"></div>
+    <div id="toolsContainer"></div>
 
     <!-- Include the main js sketch -->
     <script src="./sketch.js"></script>
@@ -67,7 +56,7 @@ This code block imports the p5.js, ML5.js, and MLTK libraries. It also links our
 
 To correctly render the UI elements, we create 3 divs inside the body of the page.
 
-## 4. JS Code Structure
+## 3. JS Code Structure
 
 It's now time to look at the core of the project contained in the JS file.
 
@@ -83,7 +72,7 @@ function setup() {
 function draw() {}
 ```
 
-## 5. The MLTK object
+## 4. The MLTK object
 
 To access the features provided by the MLTK library we need to create an MLTK object.
 
@@ -96,7 +85,7 @@ function setup() {
   let canvas = createCanvas(windowWidth, windowHeight - 50);
   canvas.parent('sketchContainer');
 
-  // initialize the MLTK object passing the two callback functions used for training and play modes
+  // initialize the MLTK object and pass two callback functions used for training and play modes
   mltk = new MLTK(train, play);
 }
 ```
@@ -124,7 +113,7 @@ function setup() {
   let canvas = createCanvas(windowWidth, windowHeight - 50);
   canvas.parent('sketchContainer');
 
-  // initialize the MLTK object passing the two callback functions used for training and play modes
+  // initialize the MLTK object and pass two callback functions used for training and play modes
   mltk = new MLTK(train, play);
 
   // Add buttons to initiate/end the BLE connection.
@@ -146,11 +135,11 @@ After pressing the connect button, a popup will appear, inviting the user to sel
 
 ![MLTK UI]({{ site.baseurl}}/assets/connect-button.png "connect UI")
 
-## 6. Training the sketch
+## 5. Training mode
 
 Now that most of the code skeleton is ready, we can focus on the MLTK API and in particular the training function.
 
-![how to]({{ site.baseurl}}/assets/howto.png "How to use the mltk board")
+![how to]({{ site.baseurl}}/assets/howto.png "How to use the MLTK board")
 
 First, let's review the training workflow of the toolkit:
 
@@ -166,7 +155,7 @@ function train() {
   // get the label of the class selected from the board
   let label = mltk.getActiveClass();
 
-  //get some data from the board sensor and use it as training features..
+  //get some data from the board sensor and use it as training features.
   let features = mltk.getMagnetometerData();
   mltk.addTrainingData(label, features);
 }
@@ -180,7 +169,7 @@ Let's break down what is happening in this block:
 
 Keep in mind that <span class="highlight">we can pass any multidimensional array as a feature</span> to the `addTrainingData()` function.
 
-## 7. Entering play mode
+## 6. Play mode
 
 Now that we covered most of the things that we need to know about the train function we can look at what should happen with the play function.
 
@@ -190,10 +179,9 @@ The general logic of play mode is:
 
 1. Read data from the sensors
 1. Run the classification algorithm on the data to identify to which trained class the data from the sensor is closest to.
-1. Light up the corresponding LED on the MLTK board.
-   Similarly to the train function the play function will need to perform a series of actions:
+1. Light up the corresponding LED on the MLTK board. Similarly to the train function, the play function will need to perform a series of actions.
 
-In code, this logic looks like:
+In code, the logic looks like:
 
 ```javascript
 // this function will run in a loop when you are in play mode.
@@ -227,7 +215,7 @@ In the code snippet above, `gotResults( err, result )` will be invoked when the 
 
 The library will automatically turn on the appropriate LED from the LED ring on the board, but to do something with the data being classified it is handy to save the returned label into a global variable. In the code snippet above this global variable is `activeClass`
 
-## 8. Visualize the label on screen
+## 7. Visualize the label on screen
 
 At this stage the sketch should already be able to interface with the board, train some features and visualize the result from the classification when in play mode. However, to make the example code a bit more complete let's also visualize the selected label on screen.
 
@@ -241,7 +229,7 @@ function draw() {
 }
 ```
 
-## 9. Running the sketch
+## 8. Running the sketch
 
 We are now ready to run the sketch and play with it:
 
@@ -254,10 +242,10 @@ We are now ready to run the sketch and play with it:
 7. See the result of the classification on the board and on the screen
 8. Hurray!
 
-## 10. Get creative!
+## 9. Get creative!
 
 You are now ready to get creative and explore all the functionalities of the library.
 
-Explore the [examples section](examples.html) to find more inspirations and have a look at the api page for a list of all the library features.
+Explore the [examples section](examples.html) to find more inspiration and have a look at the api page for a list of all the library features.
 
-You can always start your projects by duplicating this simple [boilerplate sketch](https://editor.p5js.org/10r3n20/sketches/Ttccl7mKL)
+You can always start your projects by duplicating this [boilerplate sketch in the p5.js editor](https://editor.p5js.org/10r3n20/sketches/Ttccl7mKL) or by looking at [the boilerplate sketch on Github](https://github.com/id-studiolab/MLTK01/tree/master/examples/boilerplate).
