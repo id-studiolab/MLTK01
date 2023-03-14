@@ -21,4 +21,3 @@ For this tutorial, you will need:
 - An **Arduino Nano 33 BLE Sense** and the **Arduino IDE**. You can download it [here](https://www.arduino.cc/en/software); you'll only use the IDE to load the code to set up the Arduino Nano once.
 - A **web browser**. Currently the [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API) is only supported by Google Chrome so please make sure to run your sketch with that browser.
 - A **place to write your code**. You can use your favorite editor, like Atom or VSCode, or the [p5.js web editor](https://editor.p5js.org/).
-
