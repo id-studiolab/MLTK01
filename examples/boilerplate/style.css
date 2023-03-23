@@ -1,17 +1,16 @@
-/*This refers to the entire document body*/
-
+html,
 body {
-  padding: 0px;
-  margin: 0px;
+  margin: 0;
+  padding: 0;
+}
+
+canvas {
+  display: block;
 }
 
 h1 {
   font-size: 48pt;
 }
-
-
-/*This refers to any paragraph tag*/
-
 p {
   font-size: 12pt;
 }
