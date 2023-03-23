@@ -38,10 +38,11 @@ A Game Controller remix of this p5.js sketch, [Endless Landscape](https://editor
 
 **P5.JS Sketch**: [https://editor.p5js.org/lennymd/sketches/VouazLv_i](https://editor.p5js.org/lennymd/sketches/VouazLv_i)
 
-<h2 class="exercise-title">Drama stick</h2>
+<h2 class="exercise-title">Dramastick</h2>
 
-**TRAIN MODE**: @@TK@@
+<br><br><br>
+**TRAIN MODE**: Train the board to recognize different gestures of how you hold the Arduino Nano.
 
-**PLAY MODE**: @@TK@@
+**PLAY MODE**: Use the gestures to play different sounds.
 
-**P5.JS Sketch**: @@TK
+**P5.JS Sketch**: [https://editor.p5js.org/lennymd/sketches/j7tGj12BZ](https://editor.p5js.org/lennymd/sketches/j7tGj12BZ)
