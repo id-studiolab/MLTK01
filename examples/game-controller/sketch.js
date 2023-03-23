@@ -24,7 +24,7 @@ function setup() {
 }
 
 function draw() {
-  // the draw function only draws the active class to the canvas
+  // the draw function is looped every frame. We clear the canvas and draw the ball.
   background('#101010');
   textAlign(LEFT);
   textSize(20);
@@ -48,21 +48,27 @@ function drawBall() {
 function updateBallPosition() {
   switch (activeClass) {
     case 0:
+      // no movement
       velocity = 0;
       break;
     case 1:
+      // ball is "moving" right
       velocity = +1;
       break;
     case 2:
+      // ball is "moving" right, faster.
       velocity = +2;
       break;
     case 7:
+      // ball is "moving" left
       velocity = -1;
       break;
     case 6:
+      // ball is "moving" left, faster.
       velocity = -2;
       break;
     default:
+      // no movement
       velocity = 0;
       break;
   }
