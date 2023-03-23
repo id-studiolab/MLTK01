@@ -69,7 +69,7 @@ This code block imports the p5.js, ML5.js, and MLTK libraries. It also links our
 
 To correctly render the UI elements, we create 3 div elements inside the body of the page.
 
-## 4. JS Code Structure
+## 4\_ JS Code Structure
 
 It's now time to look at the core of the project contained in the JS file.
 
@@ -182,7 +182,7 @@ Let's break down what is happening in this block:
 
 Keep in mind that <span class="highlight">we can pass any multidimensional array as a feature</span> to the `addTrainingData()` function. Things become more exciting when we combine different data inputs.
 
-## 6. Play mode
+## 7\_ Play mode
 
 Now that we covered most of the things that we need to know about the train function we can look at what should happen with the play function.
 
@@ -228,7 +228,7 @@ In the code snippet above, `gotResults( err, result )` will be invoked when the 
 
 The library will automatically turn on the appropriate LED from the LED ring on the board, but to do something with the data being classified it is handy to save the returned label into a global variable. In the code snippet above this global variable is `activeClass`
 
-## 7. Visualize the label on screen
+## 8\_ Visualize the label on screen
 
 At this stage the sketch should already be able to interface with the board, train some features and visualize the result from the classification when in play mode. However, to make the example code a bit more complete let's also visualize the selected label on screen.
 
@@ -298,7 +298,7 @@ function gotResults(err, result) {
 }
 ```
 
-## 8. Running the sketch
+## 9\_ Running the sketch
 
 We are now ready to run the sketch and play with it:
 
@@ -311,7 +311,7 @@ We are now ready to run the sketch and play with it:
 7. See the result of the classification on the board and on the screen
 8. Hurray!
 
-## 9. Get creative!
+## 10\_ Get creative!
 
 You are now ready to get creative and explore all the functionalities of the library.
 
