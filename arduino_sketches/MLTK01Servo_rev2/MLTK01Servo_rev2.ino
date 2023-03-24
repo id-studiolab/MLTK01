@@ -1,3 +1,5 @@
+#define DEBUG 0    // SET TO 0 OUT TO REMOVE TRACES
+
 #include <arm_math.h>
 #include <Arduino_APDS9960.h>
 #include <Arduino_HS300x.h>
@@ -5,6 +7,8 @@
 #include <Arduino_BMI270_BMM150.h>
 #include <PDM.h>
 #include <ArduinoBLE.h>
+#include <Encoder.h>
+
 
 #include <Servo.h>
 Servo servoA0;
@@ -102,29 +106,40 @@ void setup() {
   init_record_button();
   init_encoder();
 
-  Serial.begin(115200);
-  delay(1000);
+  #if DEBUG
+    Serial.begin(115200);
+    while (!Serial); //wait for a serial port to open before continuing
+    delay(1000);
+    Serial.println("Started");
+  #endif
 
-
-  //while (!Serial); // use for debugging.
-  Serial.println("Started");
-
+  // // use for debugging.
+  
   if (!APDS.begin()) {
-    Serial.println("Failled to initialized APDS!");
+    #if DEBUG
+      Serial.println("Failled to initialized APDS!");
+    #endif
     while (1);
   }
 
   if (!HS300x.begin()) {
-    Serial.println("Failed to initialize humidity temperature sensor!");
+    #if DEBUG
+      Serial.println("Failed to initialize humidity temperature sensor!");
+    #endif
+    while (1);
   }
 
   if (!BARO.begin()) {
-    Serial.println("Failled to initialized BARO!");
+    #if DEBUG
+      Serial.println("Failled to initialized BARO!");
+    #endif
     while (1);
   }
 
   if (!IMU.begin()) {
+    #if DEBUG
     Serial.println("Failled to initialized IMU!");
+    #endif
     while (1);
   }
 
@@ -135,12 +150,16 @@ void setup() {
   // - one channel (mono mode)
   // - a 16 kHz sample rate
   if (!PDM.begin(1, 16000)) {
-    Serial.println("Failed to start PDM!");
+    #if DEBUG
+      Serial.println("Failed to start PDM!");
+    #endif
     while (1);
   }
 
   if (!BLE.begin()) {
-    Serial.println("Failled to initialized BLE!");
+    #if DEBUG
+      Serial.println("Failled to initialized BLE!");
+    #endif
     while (1);
   }
   pixels.begin();     // This initializes the NeoPixel library.
@@ -150,9 +169,11 @@ void setup() {
 
   String address = BLE.address();
 
-  Serial.print("address = ");
-  Serial.println(address);
-
+  #if DEBUG
+    Serial.print("address = ");
+    Serial.println(address);
+  #endif
+  
   address.toUpperCase();
 
   name = "MLTK01-";
@@ -161,9 +182,10 @@ void setup() {
   name += address[address.length() - 2];
   name += address[address.length() - 1];
 
-  Serial.print("name = ");
-  Serial.println(name);
-
+  #if DEBUG
+    Serial.print("name = ");
+    Serial.println(name);
+  #endif
 
   BLE.setLocalName(name.c_str());
   BLE.setDeviceName(name.c_str());
@@ -271,27 +293,28 @@ void loop() {
 
       colorCharacteristic.writeValue(colors, sizeof(colors));
 
+      #if DEBUG
+        // print the values
+        Serial.print("r = ");
+        Serial.print(r);
+        Serial.print('\t');
+        Serial.print(colors[0]);
+        Serial.print('\t');
 
-      // print the values
-      Serial.print("r = ");
-      Serial.print(r);
-      Serial.print('\t');
-      Serial.print(colors[0]);
-      Serial.print('\t');
+        Serial.print("g = ");
+        Serial.print(g);
+        Serial.print('\t');
+        Serial.print(colors[1]);
+        Serial.print('\t');
 
-      Serial.print("g = ");
-      Serial.print(g);
-      Serial.print('\t');
-      Serial.print(colors[1]);
-      Serial.print('\t');
+        Serial.print("b = ");
+        Serial.print(b);
+        Serial.print('\t');
+        Serial.print(colors[2]);
+        Serial.print('\t');
 
-      Serial.print("b = ");
-      Serial.print(b);
-      Serial.print('\t');
-      Serial.print(colors[2]);
-      Serial.print('\t');
-
-      Serial.println();
+        Serial.println();
+      #endif      
 
 
 
@@ -389,52 +412,63 @@ void onSetIOMode(BLEDevice central, BLECharacteristic characteristic) {
   byte A0_MODE = IOConfigCharacteristic[0];
   byte A5_MODE = IOConfigCharacteristic[1];
 
-  Serial.println("configuring IO");
-  Serial.print("A0_MODE: ");
-  Serial.print(A0_MODE);
+  #if DEBUG
+    Serial.println("configuring IO");
+    Serial.print("A0_MODE: ");
+    Serial.print(A0_MODE);
 
-  Serial.print("- A5_MODE: ");
-  Serial.println(A5_MODE);
+    Serial.print("- A5_MODE: ");
+    Serial.println(A5_MODE);
+  #endif
 
   switch (A0_MODE) {
     case 0:
       pinMode(A0, INPUT);
-      Serial.println("configuring A0 as INPUT");
-
+      #if DEBUG
+        Serial.println("configuring A0 as INPUT");
+      #endif
       break;
     case 1:
       pinMode(A0, OUTPUT);
-      Serial.println("configuring A0 as OUTPUT");
-
+      #if DEBUG
+        Serial.println("configuring A0 as OUTPUT");
+      #endif
       break;
     case 2:
       servoA0.attach(A0);
-      Serial.println("configuring A0 as SERVO");
+      #if DEBUG
+        Serial.println("configuring A0 as SERVO");
+      #endif
       break;
   }
 
   switch (A5_MODE) {
     case 0:
       pinMode(A5, INPUT);
-      Serial.println("configuring A5 as INPUT");
-
+      #if DEBUG
+        Serial.println("configuring A5 as INPUT");
+      #endif
       break;
     case 1:
       pinMode(A5, OUTPUT);
-      Serial.println("configuring A5 as OUTPUT");
-
+      #if DEBUG
+        Serial.println("configuring A5 as OUTPUT");
+      #endif
       break;
     case 2:
       servoA5.attach(A5);
-      Serial.println("configuring A5 as SERVO");
+      #if DEBUG
+        Serial.println("configuring A5 as SERVO");
+      #endif
       break;
   }
 }
 
 void onA0CharacteristicWrite(BLEDevice cen2tral, BLECharacteristic characteristic) {
-  Serial.print("set A0 value to " );
-  Serial.println(IOA0ValueCharacteristic[0] );
-
+  #if DEBUG
+    Serial.print("set A0 value to " );
+    Serial.println(IOA0ValueCharacteristic[0] );
+  #endif
   if (IOConfigCharacteristic[0] == 1) {
     analogWrite(A0, IOA0ValueCharacteristic[0]);
   } else if (IOConfigCharacteristic[0] == 2) {
@@ -444,9 +478,10 @@ void onA0CharacteristicWrite(BLEDevice cen2tral, BLECharacteristic characteristi
 
 
 void onA5CharacteristicWrite(BLEDevice central, BLECharacteristic characteristic) {
-  Serial.print("set A5 value to " );
-  Serial.println(IOA5ValueCharacteristic[0] );
-
+  #if DEBUG
+    Serial.print("set A5 value to " );
+    Serial.println(IOA5ValueCharacteristic[0] );
+  #endif
   if (IOConfigCharacteristic[1] == 1) {
     analogWrite(A5, IOA5ValueCharacteristic[0]);
   } else if (IOConfigCharacteristic[1] == 2) {
@@ -470,7 +505,9 @@ void onRgbLedCharacteristicWrite(BLEDevice central, BLECharacteristic characteri
 void onClassCharacteristicWrite(BLEDevice central, BLECharacteristic characteristic) {
   byte newClass = activeClassCharacteristic[0];
   activeClass = newClass;
-  Serial.println(newClass);
+  #if DEBUG
+    Serial.println(newClass);
+  #endif
 }
 
 void onLedRingCharacteristicWrite(BLEDevice central, BLECharacteristic characteristic) {
@@ -545,15 +582,18 @@ void onPDMdata() {
 
 void blePeripheralConnectHandler(BLEDevice central) {
   // central connected event handler
-  Serial.print("Connected event, central: ");
-  Serial.println(central.address());
+  #if DEBUG
+    Serial.print("Connected event, central: ");
+    Serial.println(central.address());
+  #endif
 }
 
 void blePeripheralDisconnectHandler(BLEDevice central) {
   // central disconnected event handler
-  Serial.print("Disconnected event, central: ");
-  Serial.println(central.address());
-
+  #if DEBUG
+    Serial.print("Disconnected event, central: ");
+    Serial.println(central.address());
+  #endif
   if (servoA0.attached()) {
     servoA0.detach();
   }

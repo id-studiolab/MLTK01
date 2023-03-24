@@ -8,11 +8,15 @@ void read_record_Button() {
   REC_BTN_debounder.update();
   if ( REC_BTN_debounder.rose() ) {
     isRecBtnPressed = false;
-    Serial.println("stop recording");
+    #if DEBUG
+      Serial.println("stop recording");
+    #endif
     updateRecordButtonCharacteristic();
   } else if ( REC_BTN_debounder.fell() ) {
     isRecBtnPressed = true;
-    Serial.println("start recording");
+    #if DEBUG
+      Serial.println("start recording");
+    #endif
     updateRecordButtonCharacteristic();
   }
 }
@@ -34,11 +38,15 @@ void read_mode_switch() {
   MODE_SWITCH_debounder.update();
   if ( MODE_SWITCH_debounder.rose() ) {
     activeMode = PLAY;
-    Serial.println("entering play mode");
+    #if DEBUG
+      Serial.println("entering play mode");
+    #endif
     updateModeSwitchCharacteristic();
   } else if ( MODE_SWITCH_debounder.fell() ) {
     activeMode = TRAIN;
-    Serial.println("entering train mode");
+    #if DEBUG
+     Serial.println("entering train mode");
+    #endif
     updateModeSwitchCharacteristic();
   }
 }

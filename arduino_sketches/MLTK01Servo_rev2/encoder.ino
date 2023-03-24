@@ -18,9 +18,11 @@ void scaleEncoder(int scale, int min, int max) {
     if (scaledEncoderPos > max) {
       scaledEncoderPos = min;
     }
-    Serial.println(encoder0Pos);
-    Serial.println(scaledEncoderPos);
-    Serial.println("-");
+    #if DEBUG
+      Serial.println(encoder0Pos);
+      Serial.println(scaledEncoderPos);
+      Serial.println("-");
+    #endif
     changed = true;
   } else if (encoder0Pos < oldEncoderPos - scale) {
     scaledEncoderPos--;
@@ -28,9 +30,11 @@ void scaleEncoder(int scale, int min, int max) {
     if (scaledEncoderPos < min) {
       scaledEncoderPos = max;
     }
-    Serial.println(encoder0Pos);
-    Serial.println(scaledEncoderPos);
-    Serial.println("-");
+    #if DEBUG
+      Serial.println(encoder0Pos);
+      Serial.println(scaledEncoderPos);
+      Serial.println("-");
+    #endif
     changed = true;
   }
 
