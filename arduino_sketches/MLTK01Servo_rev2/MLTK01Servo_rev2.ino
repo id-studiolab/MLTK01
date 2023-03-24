@@ -270,64 +270,39 @@ void loop() {
       unsigned short colors[3] = { r, g, b };
 
       colorCharacteristic.writeValue(colors, sizeof(colors));
-
-
-      // print the values
-      Serial.print("r = ");
-      Serial.print(r);
-      Serial.print('\t');
-      Serial.print(colors[0]);
-      Serial.print('\t');
-
-      Serial.print("g = ");
-      Serial.print(g);
-      Serial.print('\t');
-      Serial.print(colors[1]);
-      Serial.print('\t');
-
-      Serial.print("b = ");
-      Serial.print(b);
-      Serial.print('\t');
-      Serial.print(colors[2]);
-      Serial.print('\t');
-
-      Serial.println();
-
-
-
     }
 
-    if (canStreamData && proximityCharacteristic.subscribed() && APDS.proximityAvailable()) {
-      int proximity = APDS.readProximity();
+    // if (canStreamData && proximityCharacteristic.subscribed() && APDS.proximityAvailable()) {
+    //   int proximity = APDS.readProximity();
 
-      proximityCharacteristic.writeValue(proximity);
-    }
+    //   proximityCharacteristic.writeValue(proximity);
+    // }
 
-    if (canStreamData && gestureCharacteristic.subscribed() && APDS.gestureAvailable()) {
-      int gesture = APDS.readGesture();
+    // if (canStreamData && gestureCharacteristic.subscribed() && APDS.gestureAvailable()) {
+    //   int gesture = APDS.readGesture();
 
-      gestureCharacteristic.writeValue(gesture);
-    }
+    //   gestureCharacteristic.writeValue(gesture);
+    // }
 
-    if (canStreamData && accelerationCharacteristic.subscribed() && IMU.accelerationAvailable()) {
-      float x, y, z;
+    // if (canStreamData && accelerationCharacteristic.subscribed() && IMU.accelerationAvailable()) {
+    //   float x, y, z;
 
-      IMU.readAcceleration(x, y, z);
+    //   IMU.readAcceleration(x, y, z);
 
-      float acceleration[3] = { x, y, z };
+    //   float acceleration[3] = { x, y, z };
 
-      accelerationCharacteristic.writeValue(acceleration, sizeof(acceleration));
-    }
+    //   accelerationCharacteristic.writeValue(acceleration, sizeof(acceleration));
+    // }
 
-    if (canStreamData && gyroscopeCharacteristic.subscribed() && IMU.gyroscopeAvailable()) {
-      float x, y, z;
+    // if (canStreamData && gyroscopeCharacteristic.subscribed() && IMU.gyroscopeAvailable()) {
+    //   float x, y, z;
 
-      IMU.readGyroscope(x, y, z);
+    //   IMU.readGyroscope(x, y, z);
 
-      float dps[3] = { x, y, z };
+    //   float dps[3] = { x, y, z };
 
-      gyroscopeCharacteristic.writeValue(dps, sizeof(dps));
-    }
+    //   gyroscopeCharacteristic.writeValue(dps, sizeof(dps));
+    // }
 
     if (canStreamData && magneticFieldCharacteristic.subscribed() && IMU.magneticFieldAvailable()) {
       float x, y, z;
@@ -339,32 +314,32 @@ void loop() {
       magneticFieldCharacteristic.writeValue(magneticField, sizeof(magneticField));
     }
 
-    if (canStreamData && microphoneLevelCharacteristic.subscribed() && samplesRead) {
-      short micLevel;
-      // arm_rms_q15 (sampleBuffer, samplesRead, &micLevel);
+  //   if (canStreamData && microphoneLevelCharacteristic.subscribed() && samplesRead) {
+  //     short micLevel;
+  //     // arm_rms_q15 (sampleBuffer, samplesRead, &micLevel);
 
-      static arm_rfft_instance_q15 fft_instance;
-      static q15_t fftoutput[256 * 2];             //has to be twice FFT size
-      static byte spectrum[32];
-      arm_rfft_init_q15(&fft_instance, 256 /*bin count*/, 0 /*forward FFT*/, 1 /*output bit order is normal*/);
-      arm_rfft_q15(&fft_instance, (q15_t*)sampleBuffer, fftoutput);
-      arm_abs_q15(fftoutput, fftoutput, 256);
+  //     static arm_rfft_instance_q15 fft_instance;
+  //     static q15_t fftoutput[256 * 2];             //has to be twice FFT size
+  //     static byte spectrum[32];
+  //     arm_rfft_init_q15(&fft_instance, 256 /*bin count*/, 0 /*forward FFT*/, 1 /*output bit order is normal*/);
+  //     arm_rfft_q15(&fft_instance, (q15_t*)sampleBuffer, fftoutput);
+  //     arm_abs_q15(fftoutput, fftoutput, 256);
 
-      float temp = 0;
-      for (int i = 1; i < 256; i++) {
-        temp = temp + fftoutput[i];
-        if ((i & 3) == 2) {
-          if (temp > 1023) {
-            temp = 1023;
-          };
-          spectrum[i >> 3] = (byte)(temp / 2);
-          temp = 0;
-        }
-      }
-      microphoneLevelCharacteristic.writeValue((byte *) &spectrum, 32);
-      samplesRead = 0;
-    }
-  }
+  //     float temp = 0;
+  //     for (int i = 1; i < 256; i++) {
+  //       temp = temp + fftoutput[i];
+  //       if ((i & 3) == 2) {
+  //         if (temp > 1023) {
+  //           temp = 1023;
+  //         };
+  //         spectrum[i >> 3] = (byte)(temp / 2);
+  //         temp = 0;
+  //       }
+  //     }
+  //     microphoneLevelCharacteristic.writeValue((byte *) &spectrum, 32);
+  //     samplesRead = 0;
+  //   }
+   }
 }
 
 void onPressureCharacteristicRead(BLEDevice central, BLECharacteristic characteristic) {

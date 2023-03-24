@@ -110,30 +110,30 @@ class MLTK {
         maxRecords: 10,
         writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
       },
-      pressure: {
-        uuid: '6fbe1da7-4001-44de-92c4-bb6e04fb0212',
-        properties: ['BLERead'],
-        structure: ['Float32'],
-        data: {pressure: []},
-        maxRecords: 1,
-        writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
-      },
-      temperature: {
-        uuid: '6fbe1da7-4002-44de-92c4-bb6e04fb0212',
-        properties: ['BLERead'],
-        structure: ['Float32'],
-        data: {temperature: []},
-        maxRecords: 1,
-        writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
-      },
-      humidity: {
-        uuid: '6fbe1da7-4003-44de-92c4-bb6e04fb0212',
-        properties: ['BLERead'],
-        structure: ['Float32'],
-        data: {humidity: []},
-        maxRecords: 1,
-        writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
-      },
+      // pressure: {
+      //   uuid: '6fbe1da7-4001-44de-92c4-bb6e04fb0212',
+      //   properties: ['BLERead'],
+      //   structure: ['Float32'],
+      //   data: {pressure: []},
+      //   maxRecords: 1,
+      //   writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
+      // },
+      // temperature: {
+      //   uuid: '6fbe1da7-4002-44de-92c4-bb6e04fb0212',
+      //   properties: ['BLERead'],
+      //   structure: ['Float32'],
+      //   data: {temperature: []},
+      //   maxRecords: 1,
+      //   writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
+      // },
+      // humidity: {
+      //   uuid: '6fbe1da7-4003-44de-92c4-bb6e04fb0212',
+      //   properties: ['BLERead'],
+      //   structure: ['Float32'],
+      //   data: {humidity: []},
+      //   maxRecords: 1,
+      //   writeBusy: false, // we need to track this to avoid 'GATT operation in progress' errors
+      // },
 
       microphone: {
         uuid: '6fbe1da7-5001-44de-92c4-bb6e04fb0212',
@@ -372,6 +372,11 @@ class MLTK {
       false,
     );
 
+    this.establishConnection(device);
+    
+  }
+
+  async establishConnection(device){
     const server = await device.gatt.connect();
 
     this.updateStatusMsg('getting primary service ...');
@@ -397,14 +402,17 @@ class MLTK {
         !this.boardProperties[property].properties.includes('BLENotify')
       ) {
         this.boardProperties[property].polling = setInterval(() => {
-          this.boardProperties[property].characteristic
-            .readValue()
-            .then(data => {
-              this.handleIncomingRead(this.boardProperties[property], data);
-            })
-            .catch(error => {
-              console.log('Argh! error while trying to read ' + property, error);
-            });
+            this.boardProperties[property].characteristic
+              .readValue()
+              .then(data => {
+                this.handleIncomingRead(this.boardProperties[property], data);
+
+              })
+              .catch(error => {
+                console.log('Argh! error while trying to read ' + property, error);
+
+              });
+          
         }, pollingInterval);
       }
       this.boardProperties[property].rendered = false;
@@ -511,20 +519,25 @@ class MLTK {
     this.stopTraining();
     this.stopClassification();
 
-    this.afterDisconnectCallback();
+    //this.establishConnection(device);
+
+    //this.afterDisconnectCallback();
   }
 
   getBoardStatus() {
     for (const property of this.boardPropertiesNames) {
       if (this.boardProperties[property].properties.includes('BLERead')) {
-        this.boardProperties[property].characteristic
-          .readValue()
-          .then(data => {
-            this.handleIncomingRead(this.boardProperties[property], data);
-          })
-          .catch(error => {
-            console.log('Argh! error while trying to read ' + property, error);
-          });
+
+
+          this.boardProperties[property].characteristic
+            .readValue()
+            .then(data => {
+              this.handleIncomingRead(this.boardProperties[property], data);
+            })
+            .catch(error => {
+              console.log('Argh! error while trying to read ' + property, error);
+            });
+        
       }
     }
   }
@@ -969,25 +982,26 @@ class MLTK {
   }
 
   BLEwriteTo(property) {
-    if (this.boardProperties[property].writeBusy) {
-      console.log('attempting to write to "' + property + '" ble busy, not writing');
-      return; // dropping writes when one is in progress instead of queuing as LED is non-critical / realtime
-    }
 
-    this.boardProperties[property].writeBusy = true; // Ensure no write happens when GATT operation in progress
-    this.boardProperties[property].characteristic
+    if (!this.boardProperties[property].characteristic.writeBusy){
+
+      console.log("writing");
+
+      this.boardProperties[property].characteristic.writeBusy=true;
+      this.boardProperties[property].characteristic
       .writeValue(this.boardProperties[property].writeValue)
       .then(_ => {
-        console.log(this.boardProperties[property].writeValue);
-
-        this.boardProperties[property].writeBusy = false;
         console.log('done writing to "' + property + '" !');
+        this.boardProperties[property].characteristic.writeBusy=false;
       })
       .catch(error => {
         console.log(error);
-        this.boardProperties[property].writeBusy = false;
+        this.boardProperties[property].characteristic.writeBusy=false;
       });
   }
+    }
+    
+  
 }
 
 function ab2str(buf) {

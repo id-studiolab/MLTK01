@@ -17,7 +17,7 @@ function preload() {
   sounds[3] = loadSound('./assets/bwaaaow_chorus.mp3');
   sounds[4] = loadSound('./assets/cmon.mp3');
   sounds[5] = loadSound('./assets/opera_diva.mp3');
-  sounds[6] = loadSound('./assets/my-luv-uv-uv-uv-uv-in.mp3 ');
+  sounds[6] = loadSound('./assets/my-luv-uv-uv-uv-uv-in.mp3');
   sounds[7] = loadSound('./assets/ohh-hoo_yeah.mp3');
 }
 function setup() {
