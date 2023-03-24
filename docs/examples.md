@@ -46,3 +46,11 @@ A Game Controller remix of this p5.js sketch, [Endless Landscape](https://editor
 **PLAY MODE**: Use the gestures to play different sounds.
 
 **P5.JS Sketch**: [https://editor.p5js.org/lennymd/sketches/j7tGj12BZ](https://editor.p5js.org/lennymd/sketches/j7tGj12BZ)
+
+<h2 class="exercise-title">Color extravaganza</h2>
+<br><br><br>
+**TRAIN MODE**: Train the board to recognize different colors through the sensor on the Arduino Nano.
+
+**PLAY MODE**: Use the colors to play different sounds.
+
+**P5.JS Sketch**: [https://editor.p5js.org/lennymd/sketches/UDwrIjsxD](https://editor.p5js.org/lennymd/sketches/UDwrIjsxD)
