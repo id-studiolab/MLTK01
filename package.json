@@ -11,8 +11,7 @@
     "jsdoc-to-markdown": "^8.0.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "docs": "jsdoc2md \"./library/*.js\" > \"./docs/api.md\" -t \"./docs/api-template.hbs\""
+    "docs": "jsdoc2md \"./library/*.js\" > \"./docs/api.md\" "
   },
   "repository": {
     "type": "git",
