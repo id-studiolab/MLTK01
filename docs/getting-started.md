@@ -160,7 +160,7 @@ First, let's review the training workflow of the toolkit:
 2. We can select a specific class by turning the rotary encoder on the board. The LED ring will indicate which class we have selected to train.
 3. To actually train the model, press the "record" button on the board. While the record button is pressed, samples from the sensors are be read and classified in the corresponding class that was previously selected via the rotary encoder.
 
-The train function we created earlier will be invoked repeatedly when the board is in train mode and the record button is being pressed. We just need to fill it in with a few line of code:
+The train function we created earlier will be invoked repeatedly when the board is in train mode and the record button is being pressed. We just need to fill it in with a few lines of code:
 
 ```javascript
 // this function will run in a loop when you are in train mode and the record button is pressed.
