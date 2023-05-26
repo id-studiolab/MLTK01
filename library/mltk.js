@@ -627,7 +627,7 @@ class MLTK {
     if (!this.stopClassificationFlag) {
       const numLabels = this.knnClassifier.getNumLabels();
       if (numLabels <= 0) {
-        console.error('There is no examples in any label');
+        console.error('There are no examples in any label');
         return;
       }
       let err = false;
