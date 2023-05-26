@@ -924,6 +924,88 @@ class MLTK {
     return magnetometerData;
   }
   /**
+   * Returns an array containing the Microphone data.
+   * @category MLTK BOARD API
+   * @returns {Array} [
+      'a0',
+      'a1',
+      'a2',
+      'a3',
+      'a4',
+      'a5',
+      'a6',
+      'a7',
+      'a8',
+      'a9',
+      'aA',
+      'aB',
+      'aC',
+      'aD',
+      'aE',
+      'aF',
+      'b0',
+      'b1',
+      'b2',
+      'b3',
+      'b4',
+      'b5',
+      'b6',
+      'b7',
+      'b8',
+      'b9',
+      'bA',
+      'bB',
+      'bC',
+      'bD',
+      'bE',
+      'bF',] Array containing the measured intensity of notes measured by the PMD */
+  getMicrophoneData() {
+    const microphoneData = [];
+    const microphoneProps = [
+      'a0',
+      'a1',
+      'a2',
+      'a3',
+      'a4',
+      'a5',
+      'a6',
+      'a7',
+      'a8',
+      'a9',
+      'aA',
+      'aB',
+      'aC',
+      'aD',
+      'aE',
+      'aF',
+      'b0',
+      'b1',
+      'b2',
+      'b3',
+      'b4',
+      'b5',
+      'b6',
+      'b7',
+      'b8',
+      'b9',
+      'bA',
+      'bB',
+      'bC',
+      'bD',
+      'bE',
+      'bF',
+    ];
+
+    for (let i = 0; i < microphoneProps.length; i++) {
+      micData[i] =
+        mltk.boardProperties.microphone.data[microphoneProps[i]][
+          mltk.boardProperties.microphone.data[microphoneProps[i]].length - 1
+        ];
+    }
+
+    return microphoneData;
+  }
+  /**
    * Returns the id of the selected class.
    * @category MLTK BOARD API
    * @returns {Number} The number of the selected class (also shown with the on board led)
