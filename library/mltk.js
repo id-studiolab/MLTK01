@@ -373,10 +373,9 @@ class MLTK {
     );
 
     this.establishConnection(device);
-    
   }
 
-  async establishConnection(device){
+  async establishConnection(device) {
     const server = await device.gatt.connect();
 
     this.updateStatusMsg('getting primary service ...');
@@ -402,17 +401,14 @@ class MLTK {
         !this.boardProperties[property].properties.includes('BLENotify')
       ) {
         this.boardProperties[property].polling = setInterval(() => {
-            this.boardProperties[property].characteristic
-              .readValue()
-              .then(data => {
-                this.handleIncomingRead(this.boardProperties[property], data);
-
-              })
-              .catch(error => {
-                console.log('Argh! error while trying to read ' + property, error);
-
-              });
-          
+          this.boardProperties[property].characteristic
+            .readValue()
+            .then(data => {
+              this.handleIncomingRead(this.boardProperties[property], data);
+            })
+            .catch(error => {
+              console.log('Argh! error while trying to read ' + property, error);
+            });
         }, pollingInterval);
       }
       this.boardProperties[property].rendered = false;
@@ -527,17 +523,14 @@ class MLTK {
   getBoardStatus() {
     for (const property of this.boardPropertiesNames) {
       if (this.boardProperties[property].properties.includes('BLERead')) {
-
-
-          this.boardProperties[property].characteristic
-            .readValue()
-            .then(data => {
-              this.handleIncomingRead(this.boardProperties[property], data);
-            })
-            .catch(error => {
-              console.log('Argh! error while trying to read ' + property, error);
-            });
-        
+        this.boardProperties[property].characteristic
+          .readValue()
+          .then(data => {
+            this.handleIncomingRead(this.boardProperties[property], data);
+          })
+          .catch(error => {
+            console.log('Argh! error while trying to read ' + property, error);
+          });
       }
     }
   }
@@ -982,26 +975,22 @@ class MLTK {
   }
 
   BLEwriteTo(property) {
+    if (!this.boardProperties[property].characteristic.writeBusy) {
+      console.log('writing');
 
-    if (!this.boardProperties[property].characteristic.writeBusy){
-
-      console.log("writing");
-
-      this.boardProperties[property].characteristic.writeBusy=true;
+      this.boardProperties[property].characteristic.writeBusy = true;
       this.boardProperties[property].characteristic
-      .writeValue(this.boardProperties[property].writeValue)
-      .then(_ => {
-        console.log('done writing to "' + property + '" !');
-        this.boardProperties[property].characteristic.writeBusy=false;
-      })
-      .catch(error => {
-        console.log(error);
-        this.boardProperties[property].characteristic.writeBusy=false;
-      });
-  }
+        .writeValue(this.boardProperties[property].writeValue)
+        .then(_ => {
+          console.log('done writing to "' + property + '" !');
+          this.boardProperties[property].characteristic.writeBusy = false;
+        })
+        .catch(error => {
+          console.log(error);
+          this.boardProperties[property].characteristic.writeBusy = false;
+        });
     }
-    
-  
+  }
 }
 
 function ab2str(buf) {
