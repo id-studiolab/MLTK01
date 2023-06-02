@@ -41,6 +41,7 @@ A Game Controller remix of this p5.js sketch, [Endless Landscape](https://editor
 <h2 class="exercise-title">Dramastick</h2>
 
 <br><br><br>
+
 **TRAIN MODE**: Train the board to recognize different gestures of how you hold the Arduino Nano.
 
 **PLAY MODE**: Use the gestures to play different sounds.
