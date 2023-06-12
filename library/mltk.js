@@ -960,7 +960,7 @@ class MLTK {
       'bE',
       'bF',] Array containing the measured intensity of notes measured by the PMD */
   getMicrophoneData() {
-    const microphoneData = [];
+    let microphoneData = [];
     const microphoneProps = [
       'a0',
       'a1',
@@ -997,7 +997,7 @@ class MLTK {
     ];
 
     for (let i = 0; i < microphoneProps.length; i++) {
-      micData[i] =
+      microphoneData[i] =
         mltk.boardProperties.microphone.data[microphoneProps[i]][
           mltk.boardProperties.microphone.data[microphoneProps[i]].length - 1
         ];
